@@ -1,0 +1,548 @@
+"apiVersion": |-
+  argoproj.io/v1alpha1
+"kind": |-
+  Workflow
+"metadata":
+  "annotations":
+    "pipelines.kubeflow.org/pipeline_spec": |-
+      {"description": "Data and Artifacts processing", "inputs": [{"default": "YDataSynthetic", "name": "project_name", "optional": true}, {"default": "pipelines_artifacts", "name": "bucket_name", "optional": true}, {"default": "Artifacts", "name": "file_directory_path", "optional": true}, {"default": "Data_Summary.csv", "name": "filename", "optional": true}, {"default": "Player_data.csv", "name": "outfilename", "optional": true}, {"default": "sample.json", "name": "outjsonname", "optional": true}, {"default": "Instructions.md", "name": "markdown_filename", "optional": true}, {"default": "sample_graph.html", "name": "html_filename", "optional": true}], "name": "Trainer Pipeline"}
+  "generateName": |-
+    trainer-pipeline-
+"spec":
+  "arguments":
+    "parameters":
+    - "name": |-
+        project_name
+      "value": |-
+        YDataSynthetic
+    - "name": |-
+        bucket_name
+      "value": |-
+        pipelines_artifacts
+    - "name": |-
+        file_directory_path
+      "value": |-
+        Artifacts
+    - "name": |-
+        filename
+      "value": |-
+        Data_Summary.csv
+    - "name": |-
+        outfilename
+      "value": |-
+        Player_data.csv
+    - "name": |-
+        outjsonname
+      "value": |-
+        sample.json
+    - "name": |-
+        markdown_filename
+      "value": |-
+        Instructions.md
+    - "name": |-
+        html_filename
+      "value": |-
+        sample_graph.html
+  "entrypoint": |-
+    trainer-pipeline
+  "serviceAccountName": |-
+    pipeline-runner
+  "templates":
+  - "container":
+      "args":
+      - |-
+        --project-name
+      - |-
+        {{inputs.parameters.project_name}}
+      - |-
+        --bucket-name
+      - |-
+        {{inputs.parameters.bucket_name}}
+      - |-
+        --file-directory-path
+      - |-
+        {{inputs.parameters.file_directory_path}}
+      - |-
+        --filename
+      - |-
+        {{inputs.parameters.outfilename}}
+      - |-
+        --outfile
+      - |-
+        /tmp/outputs/outfile/data
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def _make_parent_dirs_and_return_path(file_path: str):\n    import os\n \
+        \   os.makedirs(os.path.dirname(file_path), exist_ok=True)\n    return file_path\n\
+        \ndef exchange_files_within_pipeline_blocks1(project_name , bucket_name ,\
+        \ file_directory_path , \n                                           filename\
+        \ , outfile ):\n    #OutputPath files are Output to the Minio pod's Persistent\
+        \ Volume\n    #Note that the OutputPath variable is still declared as a function\
+        \ input parameter\n    #Using parameter outputs and File Output (OutputPath())\
+        \ at the same time does not work\n\n    import numpy as np\n    import pandas\
+        \ as pd\n    import gcsfs\n\n    #read file from GCS\n    #Access the bucket\
+        \ file-system\n\n    fs = gcsfs.GCSFileSystem(project=project_name, token\
+        \ = 'cloud')\n\n    file_path = 'gs://' + bucket_name + '/' + file_directory_path\
+        \ + '/' + filename\n\n    #pd.read_csv works simply by giving the GCS filepath\n\
+        \    df = pd.read_csv(file_path)\n\n    #Output the file to Minio as OutputPath\n\
+        \n    df.to_csv(outfile)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Exchange\
+        \ files within pipeline blocks1', description='')\n_parser.add_argument(\"\
+        --project-name\", dest=\"project_name\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--bucket-name\", dest=\"bucket_name\", type=str, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--file-directory-path\"\
+        , dest=\"file_directory_path\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--filename\", dest=\"filename\", type=str, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--outfile\", dest=\"\
+        outfile\", type=_make_parent_dirs_and_return_path, required=True, default=argparse.SUPPRESS)\n\
+        _parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"\
+        _output_paths\", [])\n\n_outputs = exchange_files_within_pipeline_blocks1(**_parsed_args)\n\
+        \n_output_serializers = [\n\n]\n\nimport os\nfor idx, output_file in enumerate(_output_files):\n\
+        \    try:\n        os.makedirs(os.path.dirname(output_file))\n    except OSError:\n\
+        \        pass\n    with open(output_file, 'w') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          bucket_name
+      - "name": |-
+          file_directory_path
+      - "name": |-
+          outfilename
+      - "name": |-
+          project_name
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "project_name", "type": "String"}, {"name": "bucket_name", "type": "String"}, {"name": "file_directory_path", "type": "String"}, {"name": "filename", "type": "String"}], "name": "Exchange files within pipeline blocks1", "outputs": [{"name": "outfile"}]}
+    "name": |-
+      exchange-files-within-pipeline-blocks1
+    "outputs":
+      "artifacts":
+      - "name": |-
+          exchange-files-within-pipeline-blocks1-outfile
+        "path": |-
+          /tmp/outputs/outfile/data
+  - "container":
+      "args":
+      - |-
+        --infile
+      - |-
+        /tmp/inputs/infile/data
+      - |-
+        --outfile
+      - |-
+        /tmp/outputs/outfile/data
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def _make_parent_dirs_and_return_path(file_path: str):\n    import os\n \
+        \   os.makedirs(os.path.dirname(file_path), exist_ok=True)\n    return file_path\n\
+        \ndef exchange_files_within_pipeline_blocks2(infile ,\n                  \
+        \                         outfile ): \n    #OutputPath files are Output to\
+        \ the Minio pod's Persistent Volume\n    #Note that the OutputPath variable\
+        \ is still declared as a function input parameter\n\n    import numpy as np\n\
+        \    import pandas as pd\n\n    #read file output by first container from\
+        \ the Minio Persistent Volume\n    df = pd.read_csv(infile)\n\n    print('Input\
+        \ File: \\n')\n    print(df)\n    #Do your processing\n    df_trim = df.iloc[:,0:2]\n\
+        \n    print('Output File: \\n')\n    print(df_trim)\n\n    #Output the processed\
+        \ file\n    df_trim.to_csv(outfile)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Exchange\
+        \ files within pipeline blocks2', description='')\n_parser.add_argument(\"\
+        --infile\", dest=\"infile\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--outfile\", dest=\"outfile\", type=_make_parent_dirs_and_return_path,\
+        \ required=True, default=argparse.SUPPRESS)\n_parsed_args = vars(_parser.parse_args())\n\
+        _output_files = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = exchange_files_within_pipeline_blocks2(**_parsed_args)\n\
+        \n_output_serializers = [\n\n]\n\nimport os\nfor idx, output_file in enumerate(_output_files):\n\
+        \    try:\n        os.makedirs(os.path.dirname(output_file))\n    except OSError:\n\
+        \        pass\n    with open(output_file, 'w') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "artifacts":
+      - "name": |-
+          exchange-files-within-pipeline-blocks1-outfile
+        "path": |-
+          /tmp/inputs/infile/data
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "infile"}], "name": "Exchange files within pipeline blocks2", "outputs": [{"name": "outfile"}]}
+    "name": |-
+      exchange-files-within-pipeline-blocks2
+    "outputs":
+      "artifacts":
+      - "name": |-
+          exchange-files-within-pipeline-blocks2-outfile
+        "path": |-
+          /tmp/outputs/outfile/data
+  - "container":
+      "args":
+      - |-
+        --project-name
+      - |-
+        {{inputs.parameters.project_name}}
+      - |-
+        --bucket-name
+      - |-
+        {{inputs.parameters.bucket_name}}
+      - |-
+        --file-directory-path
+      - |-
+        {{inputs.parameters.file_directory_path}}
+      - |-
+        --markdown-filename
+      - |-
+        {{inputs.parameters.markdown_filename}}
+      - |-
+        --html-filename
+      - |-
+        {{inputs.parameters.html_filename}}
+      - |-
+        --mlpipeline-ui-metadata
+      - |-
+        /tmp/outputs/mlpipeline_ui_metadata/data
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' 'mpld3==0.5.1' 'seaborn==0.9.0' 'matplotlib==3.1.1' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' 'mpld3==0.5.1' 'seaborn==0.9.0' 'matplotlib==3.1.1' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def _make_parent_dirs_and_return_path(file_path: str):\n    import os\n \
+        \   os.makedirs(os.path.dirname(file_path), exist_ok=True)\n    return file_path\n\
+        \ndef generate_artifacts(project_name , bucket_name , file_directory_path\
+        \ , markdown_filename ,\n                       html_filename , mlpipeline_ui_metadata\
+        \ ): \n    #To generate artifacts, a metadata json file has to be created\
+        \ and written to the root level of the container's \n    #filesystem. Supported\
+        \ artifact types are -  tables, static html, confusion matrix, markdown and\
+        \ ROC curve\n    #tfdv and tfma are deprecated features\n    import numpy\
+        \ as np\n    import pandas as pd\n    import gcsfs\n    from tensorflow.python.lib.io\
+        \ import file_io\n    import json\n    import mpld3\n\n    markdown_path =\
+        \ 'gs://' + bucket_name + '/' +file_directory_path + '/' +markdown_filename\n\
+        \n    #enter the GCS filesystem\n    fs = gcsfs.GCSFileSystem(project=project_name,\
+        \ token = 'cloud')\n\n    s = '''### This is a Introductory Trainer pipeline\
+        \ to help you understand the basics of -\\n\n    *Ingesting and Uploading\
+        \ Data to Cloud Storage with Security credentials\\n\n    *Data Exchange between\
+        \ Pipeline blocks\\n\n    *Process for generating Artifacts\\n\n    Please\
+        \ Complete this Pipeline before Proceeding with the Telco Customer Churn pipelines\\\
+        n'''\n\n    #create and write the markdown file to gcs\n    with file_io.FileIO(markdown_path,\
+        \ 'w') as f:\n        f.write(s)\n\n    #create a seaborn artifact and write\
+        \ it to gcs\n    df = pd.DataFrame({'Name':['Alex','Lina','Ameya','Martin'],\
+        \ 'Age':[21,19,20,18],\n                   'Plays Football':['Yes','Yes','Yes','No']})\n\
+        \n    import matplotlib.pyplot as plt\n    import seaborn as sns\n\n    ax\
+        \ = sns.catplot(y=\"Plays Football\", kind=\"count\", data=df, height=2.0,\
+        \ aspect=3.0, \n                     legend = True)\n\n    fig = plt.gcf()\n\
+        \    html = mpld3.fig_to_html(fig)\n\n    html_path = 'gs://' + bucket_name\
+        \ + '/' +file_directory_path + '/' + html_filename\n    with file_io.FileIO(html_path,\
+        \ 'w') as f:\n        f.write(html)    \n\n    # A metadata json file has\
+        \ to be generated and dumped to the root level of the container for artifacts\
+        \ to\n    # be generated. Metadata supports the following artifacts - \n \
+        \   #   Static HTML: 'web-app'\n    #   ROC Curve: 'roc'\n    #   Confusion\
+        \ Matrix: 'confusion_matrix'\n    #   Tables: 'table'\n    #   Markdown: 'markdown'\n\
+        \n    # Storage can be 'gcs', 'minio', or 'inline'\n    # Source file path\
+        \ has to be provided - \n    # It can either be a GCS or Minio filepath. No\
+        \ need to specify anything for the 'inline' storage\n\n    # Some artifacts\
+        \ like Confusion Matrix, ROC curve and Table need a 'schema' field for Artifact\
+        \ visualisation\n    # The schema is basically the column headers and datatypes\
+        \ of the DataFrame being used to generate the Artifacts\n\n    schema = [{'name':'Name',\
+        \ 'type': 'CATEGORY'}, {'name':'Age', 'type':'CATEGORY'}, \n             \
+        \ {'name':'Plays Football', 'type':'CATEGORY'}]\n    # This schema is to output\
+        \ the same DataFrame we had created and stored to GCS in the 'read_files_gcs'\
+        \ block\n    # The field 'name' is the name of the DataFrame column\n    #\
+        \ The field 'type' is the datatype - only two Datatypes are supported - 'NUMBER'\
+        \ and 'CATEGORY'\n\n    metadata = {\n        'version' : 1, #Kubeflow Version\n\
+        \        'outputs' : [\n        # Markdown that is hardcoded inline\n    \
+        \    {\n            'storage': 'inline',\n            'source': '# Welcome\
+        \ to the Trainer',\n            'type': 'markdown',\n        },\n        #\
+        \ Markdown that is read from a file\n        {\n            'storage' : 'gcs',\n\
+        \            'source': markdown_path,\n            'type': 'markdown',\n \
+        \       }, #html web-app(for output of matplotlib/seaborn)\n        {\n  \
+        \        'type': 'table',\n          'storage': 'gcs',\n          'format':\
+        \ 'csv',\n          'header': [x['name'] for x in schema],\n          'source':\
+        \ 'gs://pipelines_artifacts/Artifacts/Player_data.csv'\n        },\n     \
+        \   {        \n          'type': 'web-app',\n          'storage': 'gcs',\n\
+        \          'source': html_path\n        }]\n    }\n\n    #dump file to root\
+        \ level of container's filesystem\n    with file_io.FileIO('/mlpipeline-ui-metadata.json',\
+        \ 'w') as f:\n        json.dump(metadata, f)\n\n    #dump file to Minio Output\n\
+        \    with file_io.FileIO(mlpipeline_ui_metadata, 'w') as f:\n        json.dump(metadata,\
+        \ f)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Generate\
+        \ artifacts', description='')\n_parser.add_argument(\"--project-name\", dest=\"\
+        project_name\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --bucket-name\", dest=\"bucket_name\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--file-directory-path\", dest=\"file_directory_path\"\
+        , type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --markdown-filename\", dest=\"markdown_filename\", type=str, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--html-filename\", dest=\"\
+        html_filename\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --mlpipeline-ui-metadata\", dest=\"mlpipeline_ui_metadata\", type=_make_parent_dirs_and_return_path,\
+        \ required=True, default=argparse.SUPPRESS)\n_parsed_args = vars(_parser.parse_args())\n\
+        _output_files = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = generate_artifacts(**_parsed_args)\n\
+        \n_output_serializers = [\n\n]\n\nimport os\nfor idx, output_file in enumerate(_output_files):\n\
+        \    try:\n        os.makedirs(os.path.dirname(output_file))\n    except OSError:\n\
+        \        pass\n    with open(output_file, 'w') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          bucket_name
+      - "name": |-
+          file_directory_path
+      - "name": |-
+          html_filename
+      - "name": |-
+          markdown_filename
+      - "name": |-
+          project_name
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "project_name", "type": "String"}, {"name": "bucket_name", "type": "String"}, {"name": "file_directory_path", "type": "String"}, {"name": "markdown_filename", "type": "String"}, {"name": "html_filename", "type": "String"}], "name": "Generate artifacts", "outputs": [{"name": "mlpipeline_ui_metadata"}]}
+    "name": |-
+      generate-artifacts
+    "outputs":
+      "artifacts":
+      - "name": |-
+          mlpipeline-ui-metadata
+        "path": |-
+          /tmp/outputs/mlpipeline_ui_metadata/data
+  - "container":
+      "args":
+      - |-
+        --project-name
+      - |-
+        {{inputs.parameters.project_name}}
+      - |-
+        --bucket-name
+      - |-
+        {{inputs.parameters.bucket_name}}
+      - |-
+        --file-directory-path
+      - |-
+        {{inputs.parameters.file_directory_path}}
+      - |-
+        --filename
+      - |-
+        {{inputs.parameters.filename}}
+      - |-
+        --outfilename
+      - |-
+        {{inputs.parameters.outfilename}}
+      - |-
+        --outjsonname
+      - |-
+        {{inputs.parameters.outjsonname}}
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'numpy==1.17.2' 'pandas==1.0.3' 'gcsfs' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def read_write_files_gcs(project_name , bucket_name , file_directory_path\
+        \ , filename , \n                         outfilename , outjsonname ): \n\n\
+        \    ## Import Required Libraries\n    import pandas as pd\n    import numpy\
+        \ as np\n    import gcsfs\n    from tensorflow.python.lib.io import file_io\n\
+        \    import json\n\n    #GCSFS library is required to sign into the Project\
+        \ and Access the Storage Bucket filesystem\n    #This needs to be done for\
+        \ each and every Pipeline block which needs to read/write to the bucket\n\
+        \    #This is because each Pipeline block runs as a independent Kubernetes\
+        \ pod\n\n    fs = gcsfs.GCSFileSystem(project=project_name, token = 'cloud')\n\
+        \n    file_path = 'gs://' + bucket_name + '/' + file_directory_path + '/'\
+        \ + filename\n\n    #read input\n    #pd.read_csv works simply by giving the\
+        \ GCS filepath\n    df_sample = pd.read_csv(file_path)\n\n    #Printed Outputs\
+        \ can be viewed in the Pipeline Block 'Logs' section\n    print(\"\\n\\nInput\
+        \ File:\\n\")\n    print(df_sample)\n    print('Shape: {}'.format(df_sample.shape))\n\
+        \n    df = pd.DataFrame({'Name':['Alex','Lina','Ameya','Martin'], 'Age':[21,19,20,18],\n\
+        \                   'Plays Football':['Yes','Yes','Yes','No']})\n\n    print(\"\
+        \\n\\nOutput File:\\n\")\n    print(df)\n    print('Shape: {}'.format(df.shape))\n\
+        \n    file_out_path = 'gs://' + bucket_name + '/' + file_directory_path +\
+        \ '/' + outfilename\n\n    #Output csv\n    #Keep index as False, to prevent\
+        \ an additional index row from getting added each time the file is read and\
+        \ written to\n    df.to_csv(file_out_path, index=False)\n\n    #Output json\
+        \ using file_io\n    json_out_path = 'gs://' + bucket_name + '/' + file_directory_path\
+        \ + '/' + outjsonname\n\n    s = {'name':'file1', 'outputs':'None','Format':'Json'}\n\
+        \n    #write to GCS\n    with file_io.FileIO(json_out_path, 'w') as f:\n \
+        \       json.dump(s, f)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Read\
+        \ write files gcs', description='')\n_parser.add_argument(\"--project-name\"\
+        , dest=\"project_name\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--bucket-name\", dest=\"bucket_name\", type=str, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--file-directory-path\"\
+        , dest=\"file_directory_path\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--filename\", dest=\"filename\", type=str, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--outfilename\", dest=\"\
+        outfilename\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --outjsonname\", dest=\"outjsonname\", type=str, required=True, default=argparse.SUPPRESS)\n\
+        _parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"\
+        _output_paths\", [])\n\n_outputs = read_write_files_gcs(**_parsed_args)\n\n\
+        _output_serializers = [\n\n]\n\nimport os\nfor idx, output_file in enumerate(_output_files):\n\
+        \    try:\n        os.makedirs(os.path.dirname(output_file))\n    except OSError:\n\
+        \        pass\n    with open(output_file, 'w') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          bucket_name
+      - "name": |-
+          file_directory_path
+      - "name": |-
+          filename
+      - "name": |-
+          outfilename
+      - "name": |-
+          outjsonname
+      - "name": |-
+          project_name
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "project_name", "type": "String"}, {"name": "bucket_name", "type": "String"}, {"name": "file_directory_path", "type": "String"}, {"name": "filename", "type": "String"}, {"name": "outfilename", "type": "String"}, {"name": "outjsonname", "type": "String"}], "name": "Read write files gcs"}
+    "name": |-
+      read-write-files-gcs
+  - "dag":
+      "tasks":
+      - "arguments":
+          "parameters":
+          - "name": |-
+              bucket_name
+            "value": |-
+              {{inputs.parameters.bucket_name}}
+          - "name": |-
+              file_directory_path
+            "value": |-
+              {{inputs.parameters.file_directory_path}}
+          - "name": |-
+              outfilename
+            "value": |-
+              {{inputs.parameters.outfilename}}
+          - "name": |-
+              project_name
+            "value": |-
+              {{inputs.parameters.project_name}}
+        "name": |-
+          exchange-files-within-pipeline-blocks1
+        "template": |-
+          exchange-files-within-pipeline-blocks1
+      - "arguments":
+          "artifacts":
+          - "from": |-
+              {{tasks.exchange-files-within-pipeline-blocks1.outputs.artifacts.exchange-files-within-pipeline-blocks1-outfile}}
+            "name": |-
+              exchange-files-within-pipeline-blocks1-outfile
+        "dependencies":
+        - |-
+          exchange-files-within-pipeline-blocks1
+        "name": |-
+          exchange-files-within-pipeline-blocks2
+        "template": |-
+          exchange-files-within-pipeline-blocks2
+      - "arguments":
+          "parameters":
+          - "name": |-
+              bucket_name
+            "value": |-
+              {{inputs.parameters.bucket_name}}
+          - "name": |-
+              file_directory_path
+            "value": |-
+              {{inputs.parameters.file_directory_path}}
+          - "name": |-
+              html_filename
+            "value": |-
+              {{inputs.parameters.html_filename}}
+          - "name": |-
+              markdown_filename
+            "value": |-
+              {{inputs.parameters.markdown_filename}}
+          - "name": |-
+              project_name
+            "value": |-
+              {{inputs.parameters.project_name}}
+        "name": |-
+          generate-artifacts
+        "template": |-
+          generate-artifacts
+      - "arguments":
+          "parameters":
+          - "name": |-
+              bucket_name
+            "value": |-
+              {{inputs.parameters.bucket_name}}
+          - "name": |-
+              file_directory_path
+            "value": |-
+              {{inputs.parameters.file_directory_path}}
+          - "name": |-
+              filename
+            "value": |-
+              {{inputs.parameters.filename}}
+          - "name": |-
+              outfilename
+            "value": |-
+              {{inputs.parameters.outfilename}}
+          - "name": |-
+              outjsonname
+            "value": |-
+              {{inputs.parameters.outjsonname}}
+          - "name": |-
+              project_name
+            "value": |-
+              {{inputs.parameters.project_name}}
+        "name": |-
+          read-write-files-gcs
+        "template": |-
+          read-write-files-gcs
+    "inputs":
+      "parameters":
+      - "name": |-
+          bucket_name
+      - "name": |-
+          file_directory_path
+      - "name": |-
+          filename
+      - "name": |-
+          html_filename
+      - "name": |-
+          markdown_filename
+      - "name": |-
+          outfilename
+      - "name": |-
+          outjsonname
+      - "name": |-
+          project_name
+    "name": |-
+      trainer-pipeline

@@ -1,0 +1,771 @@
+"apiVersion": |-
+  argoproj.io/v1alpha1
+"kind": |-
+  Workflow
+"metadata":
+  "annotations":
+    "pipelines.kubeflow.org/pipeline_spec": |-
+      {"description": "Calculates Simple and Compund Interest", "inputs": [{"name": "principal_amt", "type": "Float"}, {"name": "simple_interest_rate", "type": "Float"}, {"name": "compound_interest_rate", "type": "Float"}, {"name": "freq_in_months", "type": "Integer"}, {"name": "duration_in_months", "type": "Integer"}], "name": "SI-CI Pipeline"}
+  "generateName": |-
+    si-ci-pipeline-
+"spec":
+  "arguments":
+    "parameters":
+    - "name": |-
+        principal_amt
+    - "name": |-
+        simple_interest_rate
+    - "name": |-
+        compound_interest_rate
+    - "name": |-
+        freq_in_months
+    - "name": |-
+        duration_in_months
+  "entrypoint": |-
+    si-ci-pipeline
+  "serviceAccountName": |-
+    pipeline-runner
+  "templates":
+  - "container":
+      "args":
+      - |-
+        --p
+      - |-
+        {{inputs.parameters.read-inputs-principal}}
+      - |-
+        --ci-r
+      - |-
+        {{inputs.parameters.read-inputs-ci}}
+      - |-
+        --fr
+      - |-
+        {{inputs.parameters.read-inputs-freq}}
+      - |-
+        --dur
+      - |-
+        {{inputs.parameters.read-inputs-duration}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/pr/data
+      - |-
+        /tmp/outputs/ci_r/data
+      - |-
+        /tmp/outputs/freq/data
+      - |-
+        /tmp/outputs/dur/data
+      - |-
+        /tmp/outputs/amt_c/data
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def ci_calc(p  , ci_r  , fr  , dur ):      \n                           \
+        \                                        \n    amt_c = p*(pow((1+ci_r/100),\
+        \ int(dur/fr)))\n    amt_c = \"{:.2f}\".format(amt_c)\n    return (p, ci_r,\
+        \ fr, dur, amt_c)\n\ndef _serialize_float(float_value: float) -> str:\n  \
+        \  if isinstance(float_value, str):\n        return float_value\n    if not\
+        \ isinstance(float_value, (float, int)):\n        raise TypeError('Value \"\
+        {}\" has type \"{}\" instead of float.'.format(str(float_value), str(type(float_value))))\n\
+        \    return str(float_value)\n\ndef _serialize_int(int_value: int) -> str:\n\
+        \    if isinstance(int_value, str):\n        return int_value\n    if not\
+        \ isinstance(int_value, int):\n        raise TypeError('Value \"{}\" has type\
+        \ \"{}\" instead of int.'.format(str(int_value), str(type(int_value))))\n\
+        \    return str(int_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Ci\
+        \ calc', description='')\n_parser.add_argument(\"--p\", dest=\"p\", type=float,\
+        \ required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--ci-r\"\
+        , dest=\"ci_r\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --fr\", dest=\"fr\", type=int, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--dur\", dest=\"dur\", type=int, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"----output-paths\", dest=\"_output_paths\", type=str,\
+        \ nargs=5)\n_parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"\
+        _output_paths\", [])\n\n_outputs = ci_calc(**_parsed_args)\n\n_output_serializers\
+        \ = [\n    _serialize_float,\n    _serialize_float,\n    _serialize_int,\n\
+        \    _serialize_int,\n    _serialize_float,\n\n]\n\nimport os\nfor idx, output_file\
+        \ in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n\
+        \    except OSError:\n        pass\n    with open(output_file, 'w') as f:\n\
+        \        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          read-inputs-ci
+      - "name": |-
+          read-inputs-duration
+      - "name": |-
+          read-inputs-freq
+      - "name": |-
+          read-inputs-principal
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "p", "type": "Float"}, {"name": "ci_r", "type": "Float"}, {"name": "fr", "type": "Integer"}, {"name": "dur", "type": "Integer"}], "name": "Ci calc", "outputs": [{"name": "pr", "type": "Float"}, {"name": "ci_r", "type": "Float"}, {"name": "freq", "type": "Integer"}, {"name": "dur", "type": "Integer"}, {"name": "amt_c", "type": "Float"}]}
+    "name": |-
+      ci-calc
+    "outputs":
+      "artifacts":
+      - "name": |-
+          ci-calc-amt_c
+        "path": |-
+          /tmp/outputs/amt_c/data
+      - "name": |-
+          ci-calc-ci_r
+        "path": |-
+          /tmp/outputs/ci_r/data
+      - "name": |-
+          ci-calc-dur
+        "path": |-
+          /tmp/outputs/dur/data
+      - "name": |-
+          ci-calc-freq
+        "path": |-
+          /tmp/outputs/freq/data
+      - "name": |-
+          ci-calc-pr
+        "path": |-
+          /tmp/outputs/pr/data
+      "parameters":
+      - "name": |-
+          ci-calc-amt_c
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/amt_c/data
+      - "name": |-
+          ci-calc-ci_r
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/ci_r/data
+      - "name": |-
+          ci-calc-dur
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/dur/data
+      - "name": |-
+          ci-calc-freq
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/freq/data
+      - "name": |-
+          ci-calc-pr
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/pr/data
+  - "container":
+      "args":
+      - |-
+        --p
+      - |-
+        {{inputs.parameters.ci-calc-pr}}
+      - |-
+        --ci-r
+      - |-
+        {{inputs.parameters.ci-calc-ci_r}}
+      - |-
+        --fr
+      - |-
+        {{inputs.parameters.ci-calc-freq}}
+      - |-
+        --dur
+      - |-
+        {{inputs.parameters.ci-calc-dur}}
+      - |-
+        --amt-c
+      - |-
+        {{inputs.parameters.ci-calc-amt_c}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/Output/data
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def ci_disp(p  , ci_r  , fr  , dur , amt_c ) :
+            s_out = "Principal Amount : {pr}\t\t   \nCompound Interest Rate : {si}% compounded every {frq} months   \nTotal Time Duration : {durn} months  \nFinal Amount : {amount}".format(pr = p,
+            si = ci_r, frq = fr, durn = dur, amount = amt_c)
+            print(s_out)
+            return s_out
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Ci disp', description='')
+        _parser.add_argument("--p", dest="p", type=float, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--ci-r", dest="ci_r", type=float, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--fr", dest="fr", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--dur", dest="dur", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--amt-c", dest="amt_c", type=float, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = ci_disp(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          ci-calc-amt_c
+      - "name": |-
+          ci-calc-ci_r
+      - "name": |-
+          ci-calc-dur
+      - "name": |-
+          ci-calc-freq
+      - "name": |-
+          ci-calc-pr
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "p", "type": "Float"}, {"name": "ci_r", "type": "Float"}, {"name": "fr", "type": "Integer"}, {"name": "dur", "type": "Integer"}, {"name": "amt_c", "type": "Float"}], "name": "Ci disp", "outputs": [{"name": "Output", "type": "String"}]}
+    "name": |-
+      ci-disp
+    "outputs":
+      "artifacts":
+      - "name": |-
+          ci-disp-output
+        "path": |-
+          /tmp/outputs/Output/data
+  - "container":
+      "args":
+      - |-
+        --principal-amt
+      - |-
+        {{inputs.parameters.principal_amt}}
+      - |-
+        --simple-interest-rate
+      - |-
+        {{inputs.parameters.simple_interest_rate}}
+      - |-
+        --compound-interest-rate
+      - |-
+        {{inputs.parameters.compound_interest_rate}}
+      - |-
+        --freq-in-months
+      - |-
+        {{inputs.parameters.freq_in_months}}
+      - |-
+        --duration-in-months
+      - |-
+        {{inputs.parameters.duration_in_months}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/principal/data
+      - |-
+        /tmp/outputs/si/data
+      - |-
+        /tmp/outputs/ci/data
+      - |-
+        /tmp/outputs/freq/data
+      - |-
+        /tmp/outputs/duration/data
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def read_inputs(principal_amt , simple_interest_rate , compound_interest_rate\
+        \ , \n                freq_in_months , duration_in_months  ):     \n     \
+        \                                                                        \
+        \              \n                                                        \
+        \           \n\n    return (principal_amt, simple_interest_rate, compound_interest_rate,\
+        \ freq_in_months, duration_in_months)\n\ndef _serialize_float(float_value:\
+        \ float) -> str:\n    if isinstance(float_value, str):\n        return float_value\n\
+        \    if not isinstance(float_value, (float, int)):\n        raise TypeError('Value\
+        \ \"{}\" has type \"{}\" instead of float.'.format(str(float_value), str(type(float_value))))\n\
+        \    return str(float_value)\n\ndef _serialize_int(int_value: int) -> str:\n\
+        \    if isinstance(int_value, str):\n        return int_value\n    if not\
+        \ isinstance(int_value, int):\n        raise TypeError('Value \"{}\" has type\
+        \ \"{}\" instead of int.'.format(str(int_value), str(type(int_value))))\n\
+        \    return str(int_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog='Read\
+        \ inputs', description='')\n_parser.add_argument(\"--principal-amt\", dest=\"\
+        principal_amt\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --simple-interest-rate\", dest=\"simple_interest_rate\", type=float, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--compound-interest-rate\"\
+        , dest=\"compound_interest_rate\", type=float, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--freq-in-months\", dest=\"freq_in_months\", type=int,\
+        \ required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--duration-in-months\"\
+        , dest=\"duration_in_months\", type=int, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"----output-paths\", dest=\"_output_paths\", type=str,\
+        \ nargs=5)\n_parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"\
+        _output_paths\", [])\n\n_outputs = read_inputs(**_parsed_args)\n\n_output_serializers\
+        \ = [\n    _serialize_float,\n    _serialize_float,\n    _serialize_float,\n\
+        \    _serialize_int,\n    _serialize_int,\n\n]\n\nimport os\nfor idx, output_file\
+        \ in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n\
+        \    except OSError:\n        pass\n    with open(output_file, 'w') as f:\n\
+        \        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          compound_interest_rate
+      - "name": |-
+          duration_in_months
+      - "name": |-
+          freq_in_months
+      - "name": |-
+          principal_amt
+      - "name": |-
+          simple_interest_rate
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "principal_amt", "type": "Float"}, {"name": "simple_interest_rate", "type": "Float"}, {"name": "compound_interest_rate", "type": "Float"}, {"name": "freq_in_months", "type": "Integer"}, {"name": "duration_in_months", "type": "Integer"}], "name": "Read inputs", "outputs": [{"name": "principal", "type": "Float"}, {"name": "si", "type": "Float"}, {"name": "ci", "type": "Float"}, {"name": "freq", "type": "Integer"}, {"name": "duration", "type": "Integer"}]}
+    "name": |-
+      read-inputs
+    "outputs":
+      "artifacts":
+      - "name": |-
+          read-inputs-ci
+        "path": |-
+          /tmp/outputs/ci/data
+      - "name": |-
+          read-inputs-duration
+        "path": |-
+          /tmp/outputs/duration/data
+      - "name": |-
+          read-inputs-freq
+        "path": |-
+          /tmp/outputs/freq/data
+      - "name": |-
+          read-inputs-principal
+        "path": |-
+          /tmp/outputs/principal/data
+      - "name": |-
+          read-inputs-si
+        "path": |-
+          /tmp/outputs/si/data
+      "parameters":
+      - "name": |-
+          read-inputs-ci
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/ci/data
+      - "name": |-
+          read-inputs-duration
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/duration/data
+      - "name": |-
+          read-inputs-freq
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/freq/data
+      - "name": |-
+          read-inputs-principal
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/principal/data
+      - "name": |-
+          read-inputs-si
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/si/data
+  - "container":
+      "args":
+      - |-
+        --p
+      - |-
+        {{inputs.parameters.read-inputs-principal}}
+      - |-
+        --si-r
+      - |-
+        {{inputs.parameters.read-inputs-si}}
+      - |-
+        --fr
+      - |-
+        {{inputs.parameters.read-inputs-freq}}
+      - |-
+        --dur
+      - |-
+        {{inputs.parameters.read-inputs-duration}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/pr/data
+      - |-
+        /tmp/outputs/si_r/data
+      - |-
+        /tmp/outputs/freq/data
+      - |-
+        /tmp/outputs/dur/data
+      - |-
+        /tmp/outputs/amt/data
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - "def si_calc(p  , si_r  , fr  , dur ):      \n                           \
+        \                                        \n    amt = p + (p*(si_r/100)*(int(dur/fr)))\n\
+        \    amt = \"{:.2f}\".format(amt)\n    return (p, si_r, fr, dur, amt)\n\n\
+        def _serialize_float(float_value: float) -> str:\n    if isinstance(float_value,\
+        \ str):\n        return float_value\n    if not isinstance(float_value, (float,\
+        \ int)):\n        raise TypeError('Value \"{}\" has type \"{}\" instead of\
+        \ float.'.format(str(float_value), str(type(float_value))))\n    return str(float_value)\n\
+        \ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,\
+        \ str):\n        return int_value\n    if not isinstance(int_value, int):\n\
+        \        raise TypeError('Value \"{}\" has type \"{}\" instead of int.'.format(str(int_value),\
+        \ str(type(int_value))))\n    return str(int_value)\n\nimport argparse\n_parser\
+        \ = argparse.ArgumentParser(prog='Si calc', description='')\n_parser.add_argument(\"\
+        --p\", dest=\"p\", type=float, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"--si-r\", dest=\"si_r\", type=float, required=True,\
+        \ default=argparse.SUPPRESS)\n_parser.add_argument(\"--fr\", dest=\"fr\",\
+        \ type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"\
+        --dur\", dest=\"dur\", type=int, required=True, default=argparse.SUPPRESS)\n\
+        _parser.add_argument(\"----output-paths\", dest=\"_output_paths\", type=str,\
+        \ nargs=5)\n_parsed_args = vars(_parser.parse_args())\n_output_files = _parsed_args.pop(\"\
+        _output_paths\", [])\n\n_outputs = si_calc(**_parsed_args)\n\n_output_serializers\
+        \ = [\n    _serialize_float,\n    _serialize_float,\n    _serialize_int,\n\
+        \    _serialize_int,\n    _serialize_float,\n\n]\n\nimport os\nfor idx, output_file\
+        \ in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n\
+        \    except OSError:\n        pass\n    with open(output_file, 'w') as f:\n\
+        \        f.write(_output_serializers[idx](_outputs[idx]))\n"
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          read-inputs-duration
+      - "name": |-
+          read-inputs-freq
+      - "name": |-
+          read-inputs-principal
+      - "name": |-
+          read-inputs-si
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "p", "type": "Float"}, {"name": "si_r", "type": "Float"}, {"name": "fr", "type": "Integer"}, {"name": "dur", "type": "Integer"}], "name": "Si calc", "outputs": [{"name": "pr", "type": "Float"}, {"name": "si_r", "type": "Float"}, {"name": "freq", "type": "Integer"}, {"name": "dur", "type": "Integer"}, {"name": "amt", "type": "Float"}]}
+    "name": |-
+      si-calc
+    "outputs":
+      "artifacts":
+      - "name": |-
+          si-calc-amt
+        "path": |-
+          /tmp/outputs/amt/data
+      - "name": |-
+          si-calc-dur
+        "path": |-
+          /tmp/outputs/dur/data
+      - "name": |-
+          si-calc-freq
+        "path": |-
+          /tmp/outputs/freq/data
+      - "name": |-
+          si-calc-pr
+        "path": |-
+          /tmp/outputs/pr/data
+      - "name": |-
+          si-calc-si_r
+        "path": |-
+          /tmp/outputs/si_r/data
+      "parameters":
+      - "name": |-
+          si-calc-amt
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/amt/data
+      - "name": |-
+          si-calc-dur
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/dur/data
+      - "name": |-
+          si-calc-freq
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/freq/data
+      - "name": |-
+          si-calc-pr
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/pr/data
+      - "name": |-
+          si-calc-si_r
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/si_r/data
+  - "dag":
+      "tasks":
+      - "arguments":
+          "parameters":
+          - "name": |-
+              read-inputs-ci
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-ci}}
+          - "name": |-
+              read-inputs-duration
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-duration}}
+          - "name": |-
+              read-inputs-freq
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-freq}}
+          - "name": |-
+              read-inputs-principal
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-principal}}
+        "dependencies":
+        - |-
+          read-inputs
+        "name": |-
+          ci-calc
+        "template": |-
+          ci-calc
+      - "arguments":
+          "parameters":
+          - "name": |-
+              ci-calc-amt_c
+            "value": |-
+              {{tasks.ci-calc.outputs.parameters.ci-calc-amt_c}}
+          - "name": |-
+              ci-calc-ci_r
+            "value": |-
+              {{tasks.ci-calc.outputs.parameters.ci-calc-ci_r}}
+          - "name": |-
+              ci-calc-dur
+            "value": |-
+              {{tasks.ci-calc.outputs.parameters.ci-calc-dur}}
+          - "name": |-
+              ci-calc-freq
+            "value": |-
+              {{tasks.ci-calc.outputs.parameters.ci-calc-freq}}
+          - "name": |-
+              ci-calc-pr
+            "value": |-
+              {{tasks.ci-calc.outputs.parameters.ci-calc-pr}}
+        "dependencies":
+        - |-
+          ci-calc
+        "name": |-
+          ci-disp
+        "template": |-
+          ci-disp
+      - "arguments":
+          "parameters":
+          - "name": |-
+              compound_interest_rate
+            "value": |-
+              {{inputs.parameters.compound_interest_rate}}
+          - "name": |-
+              duration_in_months
+            "value": |-
+              {{inputs.parameters.duration_in_months}}
+          - "name": |-
+              freq_in_months
+            "value": |-
+              {{inputs.parameters.freq_in_months}}
+          - "name": |-
+              principal_amt
+            "value": |-
+              {{inputs.parameters.principal_amt}}
+          - "name": |-
+              simple_interest_rate
+            "value": |-
+              {{inputs.parameters.simple_interest_rate}}
+        "name": |-
+          read-inputs
+        "template": |-
+          read-inputs
+      - "arguments":
+          "parameters":
+          - "name": |-
+              read-inputs-duration
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-duration}}
+          - "name": |-
+              read-inputs-freq
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-freq}}
+          - "name": |-
+              read-inputs-principal
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-principal}}
+          - "name": |-
+              read-inputs-si
+            "value": |-
+              {{tasks.read-inputs.outputs.parameters.read-inputs-si}}
+        "dependencies":
+        - |-
+          read-inputs
+        "name": |-
+          si-calc
+        "template": |-
+          si-calc
+      - "arguments":
+          "parameters":
+          - "name": |-
+              si-calc-amt
+            "value": |-
+              {{tasks.si-calc.outputs.parameters.si-calc-amt}}
+          - "name": |-
+              si-calc-dur
+            "value": |-
+              {{tasks.si-calc.outputs.parameters.si-calc-dur}}
+          - "name": |-
+              si-calc-freq
+            "value": |-
+              {{tasks.si-calc.outputs.parameters.si-calc-freq}}
+          - "name": |-
+              si-calc-pr
+            "value": |-
+              {{tasks.si-calc.outputs.parameters.si-calc-pr}}
+          - "name": |-
+              si-calc-si_r
+            "value": |-
+              {{tasks.si-calc.outputs.parameters.si-calc-si_r}}
+        "dependencies":
+        - |-
+          si-calc
+        "name": |-
+          si-disp
+        "template": |-
+          si-disp
+    "inputs":
+      "parameters":
+      - "name": |-
+          compound_interest_rate
+      - "name": |-
+          duration_in_months
+      - "name": |-
+          freq_in_months
+      - "name": |-
+          principal_amt
+      - "name": |-
+          simple_interest_rate
+    "name": |-
+      si-ci-pipeline
+  - "container":
+      "args":
+      - |-
+        --p
+      - |-
+        {{inputs.parameters.si-calc-pr}}
+      - |-
+        --si-r
+      - |-
+        {{inputs.parameters.si-calc-si_r}}
+      - |-
+        --fr
+      - |-
+        {{inputs.parameters.si-calc-freq}}
+      - |-
+        --dur
+      - |-
+        {{inputs.parameters.si-calc-dur}}
+      - |-
+        --amt
+      - |-
+        {{inputs.parameters.si-calc-amt}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/Output/data
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def si_disp(p  , si_r  , fr  , dur , amt ) :
+            s_out = "Principal Amount : {pr}    \nSimple Interest Rate : {si}% for every {frq} months   \nTotal Time Duration : {durn} months  \nFinal Amount : {amount}".format(pr = p,
+            si = si_r, frq = fr, durn = dur, amount = amt)
+            print(s_out)
+            return s_out
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Si disp', description='')
+        _parser.add_argument("--p", dest="p", type=float, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--si-r", dest="si_r", type=float, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--fr", dest="fr", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--dur", dest="dur", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--amt", dest="amt", type=float, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = si_disp(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          si-calc-amt
+      - "name": |-
+          si-calc-dur
+      - "name": |-
+          si-calc-freq
+      - "name": |-
+          si-calc-pr
+      - "name": |-
+          si-calc-si_r
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "p", "type": "Float"}, {"name": "si_r", "type": "Float"}, {"name": "fr", "type": "Integer"}, {"name": "dur", "type": "Integer"}, {"name": "amt", "type": "Float"}], "name": "Si disp", "outputs": [{"name": "Output", "type": "String"}]}
+    "name": |-
+      si-disp
+    "outputs":
+      "artifacts":
+      - "name": |-
+          si-disp-output
+        "path": |-
+          /tmp/outputs/Output/data

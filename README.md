@@ -1,9 +1,7 @@
 # YData Academy
 ## Code repository
 
-In here you'll find the code samples from our blogs posts.
-
-It is organized chronologically and every folder has the link to the blog post has well as to the dataset used.
+In here you'll find technical documentation, tutorials and code samples from our blogs posts.
 
 
 Visit us at https://YData.ai

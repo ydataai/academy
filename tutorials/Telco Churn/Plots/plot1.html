@@ -1,0 +1,43 @@
+
+
+<style>
+
+</style>
+
+<div id="fig_el12661139907775995536785945787"></div>
+<script>
+function mpld3_load_lib(url, callback){
+  var s = document.createElement('script');
+  s.src = url;
+  s.async = true;
+  s.onreadystatechange = s.onload = callback;
+  s.onerror = function(){console.warn("failed to load library " + url);};
+  document.getElementsByTagName("head")[0].appendChild(s);
+}
+
+if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
+   // already loaded: just create the figure
+   !function(mpld3){
+       
+       mpld3.draw_figure("fig_el12661139907775995536785945787", {"width": 432.0, "height": 144.0, "axes": [{"bbox": [0.13615596064814817, 0.2254166666666667, 0.8338440393518518, 0.6845833333333333], "xlim": [0.0, 5432.7], "ylim": [1.5, -0.5], "xdomain": [0.0, 5432.7], "ydomain": [1.5, -0.5], "xscale": "linear", "yscale": "linear", "axes": [{"position": "bottom", "nticks": 7, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 11.0, "grid": {"gridOn": false}, "visible": true}, {"position": "left", "nticks": 2, "tickvalues": [0, 1], "tickformat_formatter": "fixed", "tickformat": ["No", "Yes"], "scale": "linear", "fontsize": 11.0, "grid": {"gridOn": false}, "visible": true}], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el12661139907775781840", "lines": [], "paths": [{"data": "data01", "xindex": 0, "yindex": 1, "coordinates": "data", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el12661139907766996368", "dasharray": "none", "alpha": 1, "facecolor": "#214EDF", "edgecolor": "#FFFFFF", "edgewidth": 1.0, "zorder": 1}, {"data": "data02", "xindex": 0, "yindex": 1, "coordinates": "data", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el12661139907766979536", "dasharray": "none", "alpha": 1, "facecolor": "#DF7C1F", "edgecolor": "#FFFFFF", "edgewidth": 1.0, "zorder": 1}], "markers": [], "texts": [{"text": "count", "position": [0.5, -0.23838506796510453], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "hanging", "rotation": -0.0, "fontsize": 12.0, "color": "#262626", "alpha": 1, "zorder": 3, "id": "el12661139907775833744"}, {"text": "Churn", "position": [-0.09122013765869183, 0.5], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -90.0, "fontsize": 12.0, "color": "#262626", "alpha": 1, "zorder": 3, "id": "el12661139907775835024"}], "collections": [], "images": [], "sharex": [], "sharey": []}], "data": {"data01": [[0.0, -0.4], [5174.0, -0.4], [5174.0, 0.4], [0.0, 0.4]], "data02": [[0.0, 0.6], [1869.0, 0.6], [1869.0, 1.4], [0.0, 1.4]]}, "id": "el12661139907775995536", "plugins": [{"type": "reset"}, {"type": "zoom", "button": true, "enabled": false}, {"type": "boxzoom", "button": true, "enabled": false}]});
+   }(mpld3);
+}else if(typeof define === "function" && define.amd){
+   // require.js is available: use it to load d3/mpld3
+   require.config({paths: {d3: "https://d3js.org/d3.v5"}});
+   require(["d3"], function(d3){
+      window.d3 = d3;
+      mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.5.1.js", function(){
+         
+         mpld3.draw_figure("fig_el12661139907775995536785945787", {"width": 432.0, "height": 144.0, "axes": [{"bbox": [0.13615596064814817, 0.2254166666666667, 0.8338440393518518, 0.6845833333333333], "xlim": [0.0, 5432.7], "ylim": [1.5, -0.5], "xdomain": [0.0, 5432.7], "ydomain": [1.5, -0.5], "xscale": "linear", "yscale": "linear", "axes": [{"position": "bottom", "nticks": 7, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 11.0, "grid": {"gridOn": false}, "visible": true}, {"position": "left", "nticks": 2, "tickvalues": [0, 1], "tickformat_formatter": "fixed", "tickformat": ["No", "Yes"], "scale": "linear", "fontsize": 11.0, "grid": {"gridOn": false}, "visible": true}], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el12661139907775781840", "lines": [], "paths": [{"data": "data01", "xindex": 0, "yindex": 1, "coordinates": "data", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el12661139907766996368", "dasharray": "none", "alpha": 1, "facecolor": "#214EDF", "edgecolor": "#FFFFFF", "edgewidth": 1.0, "zorder": 1}, {"data": "data02", "xindex": 0, "yindex": 1, "coordinates": "data", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el12661139907766979536", "dasharray": "none", "alpha": 1, "facecolor": "#DF7C1F", "edgecolor": "#FFFFFF", "edgewidth": 1.0, "zorder": 1}], "markers": [], "texts": [{"text": "count", "position": [0.5, -0.23838506796510453], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "hanging", "rotation": -0.0, "fontsize": 12.0, "color": "#262626", "alpha": 1, "zorder": 3, "id": "el12661139907775833744"}, {"text": "Churn", "position": [-0.09122013765869183, 0.5], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -90.0, "fontsize": 12.0, "color": "#262626", "alpha": 1, "zorder": 3, "id": "el12661139907775835024"}], "collections": [], "images": [], "sharex": [], "sharey": []}], "data": {"data01": [[0.0, -0.4], [5174.0, -0.4], [5174.0, 0.4], [0.0, 0.4]], "data02": [[0.0, 0.6], [1869.0, 0.6], [1869.0, 1.4], [0.0, 1.4]]}, "id": "el12661139907775995536", "plugins": [{"type": "reset"}, {"type": "zoom", "button": true, "enabled": false}, {"type": "boxzoom", "button": true, "enabled": false}]});
+      });
+    });
+}else{
+    // require.js not available: dynamically load d3 & mpld3
+    mpld3_load_lib("https://d3js.org/d3.v5.js", function(){
+         mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.5.1.js", function(){
+                 
+                 mpld3.draw_figure("fig_el12661139907775995536785945787", {"width": 432.0, "height": 144.0, "axes": [{"bbox": [0.13615596064814817, 0.2254166666666667, 0.8338440393518518, 0.6845833333333333], "xlim": [0.0, 5432.7], "ylim": [1.5, -0.5], "xdomain": [0.0, 5432.7], "ydomain": [1.5, -0.5], "xscale": "linear", "yscale": "linear", "axes": [{"position": "bottom", "nticks": 7, "tickvalues": null, "tickformat_formatter": "", "tickformat": null, "scale": "linear", "fontsize": 11.0, "grid": {"gridOn": false}, "visible": true}, {"position": "left", "nticks": 2, "tickvalues": [0, 1], "tickformat_formatter": "fixed", "tickformat": ["No", "Yes"], "scale": "linear", "fontsize": 11.0, "grid": {"gridOn": false}, "visible": true}], "axesbg": "#FFFFFF", "axesbgalpha": null, "zoomable": true, "id": "el12661139907775781840", "lines": [], "paths": [{"data": "data01", "xindex": 0, "yindex": 1, "coordinates": "data", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el12661139907766996368", "dasharray": "none", "alpha": 1, "facecolor": "#214EDF", "edgecolor": "#FFFFFF", "edgewidth": 1.0, "zorder": 1}, {"data": "data02", "xindex": 0, "yindex": 1, "coordinates": "data", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el12661139907766979536", "dasharray": "none", "alpha": 1, "facecolor": "#DF7C1F", "edgecolor": "#FFFFFF", "edgewidth": 1.0, "zorder": 1}], "markers": [], "texts": [{"text": "count", "position": [0.5, -0.23838506796510453], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "hanging", "rotation": -0.0, "fontsize": 12.0, "color": "#262626", "alpha": 1, "zorder": 3, "id": "el12661139907775833744"}, {"text": "Churn", "position": [-0.09122013765869183, 0.5], "coordinates": "axes", "h_anchor": "middle", "v_baseline": "auto", "rotation": -90.0, "fontsize": 12.0, "color": "#262626", "alpha": 1, "zorder": 3, "id": "el12661139907775835024"}], "collections": [], "images": [], "sharex": [], "sharey": []}], "data": {"data01": [[0.0, -0.4], [5174.0, -0.4], [5174.0, 0.4], [0.0, 0.4]], "data02": [[0.0, 0.6], [1869.0, 0.6], [1869.0, 1.4], [0.0, 1.4]]}, "id": "el12661139907775995536", "plugins": [{"type": "reset"}, {"type": "zoom", "button": true, "enabled": false}, {"type": "boxzoom", "button": true, "enabled": false}]});
+            })
+         });
+}
+</script>

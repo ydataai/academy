@@ -1,0 +1,542 @@
+"apiVersion": |-
+  argoproj.io/v1alpha1
+"kind": |-
+  Workflow
+"metadata":
+  "annotations":
+    "pipelines.kubeflow.org/pipeline_spec": |-
+      {"description": "Prime Factorizes if given number is a Consonant", "inputs": [{"name": "enter_number", "type": "Integer"}], "name": "Prime Factorisation"}
+  "generateName": |-
+    prime-factorisation-
+"spec":
+  "arguments":
+    "parameters":
+    - "name": |-
+        enter_number
+  "entrypoint": |-
+    prime-factorisation
+  "onExit": |-
+    exit-handle
+  "serviceAccountName": |-
+    pipeline-runner
+  "templates":
+  - "dag":
+      "tasks":
+      - "arguments":
+          "parameters":
+          - "name": |-
+              is-prime-num
+            "value": |-
+              {{inputs.parameters.is-prime-num}}
+        "name": |-
+          prime-print
+        "template": |-
+          prime-print
+    "inputs":
+      "parameters":
+      - "name": |-
+          is-prime-num
+    "name": |-
+      condition-2
+  - "dag":
+      "tasks":
+      - "arguments":
+          "parameters":
+          - "name": |-
+              is-prime-num
+            "value": |-
+              {{inputs.parameters.is-prime-num}}
+        "name": |-
+          prime-fact
+        "template": |-
+          prime-fact
+    "inputs":
+      "parameters":
+      - "name": |-
+          is-prime-num
+    "name": |-
+      condition-3
+  - "container":
+      "args":
+      - |-
+        --msg
+      - |-
+        Operation completed
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def exit_handle(msg ):
+            print(msg)
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Exit handle', description='')
+        _parser.add_argument("--msg", dest="msg", type=str, required=True, default=argparse.SUPPRESS)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = exit_handle(**_parsed_args)
+
+        _output_serializers = [
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "msg", "type": "String"}], "name": "Exit handle"}
+    "name": |-
+      exit-handle
+  - "dag":
+      "tasks":
+      - "arguments":
+          "parameters":
+          - "name": |-
+              is-prime-num
+            "value": |-
+              {{tasks.is-prime.outputs.parameters.is-prime-num}}
+        "dependencies":
+        - |-
+          is-prime
+        "name": |-
+          condition-2
+        "template": |-
+          condition-2
+        "when": |-
+          "{{tasks.is-prime.outputs.parameters.is-prime-result}}" == "True"
+      - "arguments":
+          "parameters":
+          - "name": |-
+              is-prime-num
+            "value": |-
+              {{tasks.is-prime.outputs.parameters.is-prime-num}}
+        "dependencies":
+        - |-
+          is-prime
+        "name": |-
+          condition-3
+        "template": |-
+          condition-3
+        "when": |-
+          "{{tasks.is-prime.outputs.parameters.is-prime-result}}" == "False"
+      - "arguments":
+          "parameters":
+          - "name": |-
+              enter_number
+            "value": |-
+              {{inputs.parameters.enter_number}}
+        "name": |-
+          import-number
+        "template": |-
+          import-number
+      - "arguments":
+          "parameters":
+          - "name": |-
+              import-number-output
+            "value": |-
+              {{tasks.import-number.outputs.parameters.import-number-output}}
+        "dependencies":
+        - |-
+          import-number
+        "name": |-
+          is-prime
+        "template": |-
+          is-prime
+    "inputs":
+      "parameters":
+      - "name": |-
+          enter_number
+    "name": |-
+      exit-handler-1
+  - "container":
+      "args":
+      - |-
+        --numb
+      - |-
+        {{inputs.parameters.enter_number}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/Output/data
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'sympy' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'sympy' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def import_number(numb )  :
+            num = numb
+            return num
+
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Import number', description='')
+        _parser.add_argument("--numb", dest="numb", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = import_number(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_int,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          enter_number
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "numb", "type": "Integer"}], "name": "Import number", "outputs": [{"name": "Output", "type": "Integer"}]}
+    "name": |-
+      import-number
+    "outputs":
+      "artifacts":
+      - "name": |-
+          import-number-output
+        "path": |-
+          /tmp/outputs/Output/data
+      "parameters":
+      - "name": |-
+          import-number-output
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/Output/data
+  - "container":
+      "args":
+      - |-
+        --numb
+      - |-
+        {{inputs.parameters.import-number-output}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/num/data
+      - |-
+        /tmp/outputs/result/data
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'sympy' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'sympy' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def is_prime(numb )      :
+            import sympy
+
+            num = numb
+            if(sympy.isprime(num)):
+                str_isprime = "{} is a Prime Number".format(num)
+            else:
+                str_isprime = "{} is a Consonant".format(num)
+
+            print(str_isprime)
+
+            return (num, sympy.isprime(num))
+
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
+        def _serialize_bool(bool_value: bool) -> str:
+            if isinstance(bool_value, str):
+                return bool_value
+            if not isinstance(bool_value, bool):
+                raise TypeError('Value "{}" has type "{}" instead of bool.'.format(str(bool_value), str(type(bool_value))))
+            return str(bool_value)
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Is prime', description='')
+        _parser.add_argument("--numb", dest="numb", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = is_prime(**_parsed_args)
+
+        _output_serializers = [
+            _serialize_int,
+            _serialize_bool,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          import-number-output
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "numb", "type": "Integer"}], "name": "Is prime", "outputs": [{"name": "num", "type": "Integer"}, {"name": "result", "type": "Boolean"}]}
+    "name": |-
+      is-prime
+    "outputs":
+      "artifacts":
+      - "name": |-
+          is-prime-num
+        "path": |-
+          /tmp/outputs/num/data
+      - "name": |-
+          is-prime-result
+        "path": |-
+          /tmp/outputs/result/data
+      "parameters":
+      - "name": |-
+          is-prime-num
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/num/data
+      - "name": |-
+          is-prime-result
+        "valueFrom":
+          "path": |-
+            /tmp/outputs/result/data
+  - "container":
+      "args":
+      - |-
+        --numb
+      - |-
+        {{inputs.parameters.is-prime-num}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/num/data
+      - |-
+        /tmp/outputs/prime_factors/data
+      "command":
+      - |-
+        sh
+      - |-
+        -c
+      - |-
+        (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'sympy' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location 'sympy' --user) && "$0" "$@"
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def prime_fact(numb )      :
+            import sympy
+            num = numb
+            l_prime = sympy.primefactors(num)
+            print("Factors of {} are: ".format(num))
+            for x in l_prime:
+                print("{} ".format(x), end=" ")
+            return (num, l_prime)
+
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
+        def _serialize_json(obj) -> str:
+            if isinstance(obj, str):
+                return obj
+            import json
+            def default_serializer(obj):
+                if hasattr(obj, 'to_struct'):
+                    return obj.to_struct()
+                else:
+                    raise TypeError("Object of type '%s' is not JSON serializable and does not have .to_struct() method." % obj.__class__.__name__)
+            return json.dumps(obj, default=default_serializer)
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Prime fact', description='')
+        _parser.add_argument("--numb", dest="numb", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = prime_fact(**_parsed_args)
+
+        _output_serializers = [
+            _serialize_int,
+            _serialize_json,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          is-prime-num
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "numb", "type": "Integer"}], "name": "Prime fact", "outputs": [{"name": "num", "type": "Integer"}, {"name": "prime_factors", "type": "JsonArray"}]}
+    "name": |-
+      prime-fact
+    "outputs":
+      "artifacts":
+      - "name": |-
+          prime-fact-num
+        "path": |-
+          /tmp/outputs/num/data
+      - "name": |-
+          prime-fact-prime_factors
+        "path": |-
+          /tmp/outputs/prime_factors/data
+  - "dag":
+      "tasks":
+      - "arguments":
+          "parameters":
+          - "name": |-
+              enter_number
+            "value": |-
+              {{inputs.parameters.enter_number}}
+        "name": |-
+          exit-handler-1
+        "template": |-
+          exit-handler-1
+    "inputs":
+      "parameters":
+      - "name": |-
+          enter_number
+    "name": |-
+      prime-factorisation
+  - "container":
+      "args":
+      - |-
+        --numb
+      - |-
+        {{inputs.parameters.is-prime-num}}
+      - |-
+        ----output-paths
+      - |-
+        /tmp/outputs/Output/data
+      "command":
+      - |-
+        python3
+      - |-
+        -u
+      - |-
+        -c
+      - |
+        def prime_print(numb )  :
+            s = "{} is Prime".format(numb)
+            print(s)
+            return s
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Prime print', description='')
+        _parser.add_argument("--numb", dest="numb", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = prime_print(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      "image": |-
+        tensorflow/tensorflow:1.13.2-py3
+    "inputs":
+      "parameters":
+      - "name": |-
+          is-prime-num
+    "metadata":
+      "annotations":
+        "pipelines.kubeflow.org/component_spec": |-
+          {"inputs": [{"name": "numb", "type": "Integer"}], "name": "Prime print", "outputs": [{"name": "Output", "type": "String"}]}
+    "name": |-
+      prime-print
+    "outputs":
+      "artifacts":
+      - "name": |-
+          prime-print-output
+        "path": |-
+          /tmp/outputs/Output/data
