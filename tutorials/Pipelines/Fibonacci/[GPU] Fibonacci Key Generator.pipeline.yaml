@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
-  generateName: generates-key-based-on-local-time-and-fibonacci-sequences-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.4.0, pipelines.kubeflow.org/pipeline_compilation_time: '2021-02-25T16:01:13.635680',
-    pipelines.kubeflow.org/pipeline_spec: '{"description": "Generates key based on
-      Local Time and Fibonacci Sequences", "name": "Generates key based on Local Time
+  generateName: gpu-key-based-on-local-time-and-fibonacci-sequences-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.4.0, pipelines.kubeflow.org/pipeline_compilation_time: '2021-02-25T16:00:16.033998',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "[GPU] Generates key based
+      on Local Time and Fibonacci Sequences", "name": "[GPU] Key based on Local Time
       and Fibonacci Sequences"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.4.0}
 spec:
-  entrypoint: generates-key-based-on-local-time-and-fibonacci-sequences
+  entrypoint: gpu-key-based-on-local-time-and-fibonacci-sequences
   templates:
-  - name: generates-key-based-on-local-time-and-fibonacci-sequences
+  - name: gpu-key-based-on-local-time-and-fibonacci-sequences
     dag:
       tasks:
       - name: key-decode
@@ -408,17 +408,17 @@ spec:
             print("Generated key {}".format(out_key))
             return (out_key, tok)
 
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
         def _serialize_int(int_value: int) -> str:
             if isinstance(int_value, str):
                 return int_value
             if not isinstance(int_value, int):
                 raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
             return str(int_value)
-
-        def _serialize_str(str_value: str) -> str:
-            if not isinstance(str_value, str):
-                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
-            return str_value
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Key gen', description='')
@@ -463,16 +463,15 @@ spec:
           = 0\n        q = s\n        r = s\n        for x in range(a - 1):\n            r
           = p + q\n            p = q\n            q = r\n        return r\n\n    out_key
           = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)\n    print(\"Generated
-          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_int(int_value:
-          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
-          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
-          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
-          str(int_value)\n\ndef _serialize_str(str_value: str) -> str:\n    if not
-          isinstance(str_value, str):\n        raise TypeError(''Value \"{}\" has
-          type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
-          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
-          gen'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
-          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_str(str_value:
+          str) -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
+          str):\n        return int_value\n    if not isinstance(int_value, int):\n        raise
+          TypeError(''Value \"{}\" has type \"{}\" instead of int.''.format(str(int_value),
+          str(type(int_value))))\n    return str(int_value)\n\nimport argparse\n_parser
+          = argparse.ArgumentParser(prog=''Key gen'', description='''')\n_parser.add_argument(\"--tok\",
+          dest=\"tok\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
           dest=\"_output_paths\", type=str, nargs=2)\n_parsed_args = vars(_parser.parse_args())\n_output_files
           = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_gen(**_parsed_args)\n\n_output_serializers
           = [\n    _serialize_int,\n    _serialize_str,\n\n]\n\nimport os\nfor idx,
@@ -512,17 +511,17 @@ spec:
             print("Generated key {}".format(out_key))
             return (out_key, tok)
 
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
         def _serialize_int(int_value: int) -> str:
             if isinstance(int_value, str):
                 return int_value
             if not isinstance(int_value, int):
                 raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
             return str(int_value)
-
-        def _serialize_str(str_value: str) -> str:
-            if not isinstance(str_value, str):
-                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
-            return str_value
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Key gen', description='')
@@ -569,16 +568,15 @@ spec:
           = 0\n        q = s\n        r = s\n        for x in range(a - 1):\n            r
           = p + q\n            p = q\n            q = r\n        return r\n\n    out_key
           = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)\n    print(\"Generated
-          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_int(int_value:
-          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
-          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
-          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
-          str(int_value)\n\ndef _serialize_str(str_value: str) -> str:\n    if not
-          isinstance(str_value, str):\n        raise TypeError(''Value \"{}\" has
-          type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
-          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
-          gen'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
-          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_str(str_value:
+          str) -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
+          str):\n        return int_value\n    if not isinstance(int_value, int):\n        raise
+          TypeError(''Value \"{}\" has type \"{}\" instead of int.''.format(str(int_value),
+          str(type(int_value))))\n    return str(int_value)\n\nimport argparse\n_parser
+          = argparse.ArgumentParser(prog=''Key gen'', description='''')\n_parser.add_argument(\"--tok\",
+          dest=\"tok\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
           dest=\"_output_paths\", type=str, nargs=2)\n_parsed_args = vars(_parser.parse_args())\n_output_files
           = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_gen(**_parsed_args)\n\n_output_serializers
           = [\n    _serialize_int,\n    _serialize_str,\n\n]\n\nimport os\nfor idx,
@@ -618,17 +616,17 @@ spec:
             print("Generated key {}".format(out_key))
             return (out_key, tok)
 
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
         def _serialize_int(int_value: int) -> str:
             if isinstance(int_value, str):
                 return int_value
             if not isinstance(int_value, int):
                 raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
             return str(int_value)
-
-        def _serialize_str(str_value: str) -> str:
-            if not isinstance(str_value, str):
-                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
-            return str_value
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Key gen', description='')
@@ -675,16 +673,15 @@ spec:
           = 0\n        q = s\n        r = s\n        for x in range(a - 1):\n            r
           = p + q\n            p = q\n            q = r\n        return r\n\n    out_key
           = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)\n    print(\"Generated
-          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_int(int_value:
-          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
-          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
-          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
-          str(int_value)\n\ndef _serialize_str(str_value: str) -> str:\n    if not
-          isinstance(str_value, str):\n        raise TypeError(''Value \"{}\" has
-          type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
-          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
-          gen'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
-          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_str(str_value:
+          str) -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
+          str):\n        return int_value\n    if not isinstance(int_value, int):\n        raise
+          TypeError(''Value \"{}\" has type \"{}\" instead of int.''.format(str(int_value),
+          str(type(int_value))))\n    return str(int_value)\n\nimport argparse\n_parser
+          = argparse.ArgumentParser(prog=''Key gen'', description='''')\n_parser.add_argument(\"--tok\",
+          dest=\"tok\", type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
           dest=\"_output_paths\", type=str, nargs=2)\n_parsed_args = vars(_parser.parse_args())\n_output_files
           = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_gen(**_parsed_args)\n\n_output_serializers
           = [\n    _serialize_int,\n    _serialize_str,\n\n]\n\nimport os\nfor idx,
@@ -748,12 +745,19 @@ spec:
             with open(output_file, 'w') as f:
                 f.write(_output_serializers[idx](_outputs[idx]))
       image: python:3.7
+      resources:
+        limits: {nvidia.com/gpu: 1}
     outputs:
       parameters:
       - name: token-generator-Output
         valueFrom: {path: /tmp/outputs/Output/data}
       artifacts:
       - {name: token-generator-Output, path: /tmp/outputs/Output/data}
+    tolerations:
+    - effect: NoSchedule
+      key: pipelines-gpu
+      operator: Equal
+      value: "true"
     metadata:
       annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
           {"args": ["----output-paths", {"outputPath": "Output"}], "command": ["sh",
