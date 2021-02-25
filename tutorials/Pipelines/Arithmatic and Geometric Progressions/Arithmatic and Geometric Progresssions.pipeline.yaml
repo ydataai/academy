@@ -2,16 +2,16 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: generates-ap-and-gp-and-calculates-the-sum-and-rth-term-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.2.0, pipelines.kubeflow.org/pipeline_compilation_time: '2021-02-24T18:53:54.732325',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.2.0, pipelines.kubeflow.org/pipeline_compilation_time: '2021-02-25T11:03:14.526368',
     pipelines.kubeflow.org/pipeline_spec: '{"description": "Generates AP and GP and
-      Calculates the Sum and ''r''th term", "inputs": [{"default": "0", "name": "in_first_term_ap",
-      "optional": true, "type": "Float"}, {"default": "0", "name": "in_common_difference_ap",
-      "optional": true, "type": "Float"}, {"default": "0", "name": "in_total_terms_ap",
-      "optional": true, "type": "Integer"}, {"default": "0", "name": "in_rth_term_ap",
-      "optional": true, "type": "Integer"}, {"default": "0", "name": "in_first_term_gp",
-      "optional": true, "type": "Float"}, {"default": "0", "name": "in_common_ratio_gp",
-      "optional": true, "type": "Float"}, {"default": "0", "name": "in_total_terms_gp",
-      "optional": true, "type": "Integer"}, {"default": "0", "name": "in_rth_term_gp",
+      Calculates the Sum and ''r''th term", "inputs": [{"default": "5", "name": "in_first_term_ap",
+      "optional": true, "type": "Float"}, {"default": "3", "name": "in_common_difference_ap",
+      "optional": true, "type": "Float"}, {"default": "10", "name": "in_total_terms_ap",
+      "optional": true, "type": "Integer"}, {"default": "7", "name": "in_rth_term_ap",
+      "optional": true, "type": "Integer"}, {"default": "5", "name": "in_first_term_gp",
+      "optional": true, "type": "Float"}, {"default": "2", "name": "in_common_ratio_gp",
+      "optional": true, "type": "Float"}, {"default": "10", "name": "in_total_terms_gp",
+      "optional": true, "type": "Integer"}, {"default": "8", "name": "in_rth_term_gp",
       "optional": true, "type": "Integer"}], "name": "Generates AP and GP and Calculates
       the Sum and rth term"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.2.0}
@@ -143,6 +143,13 @@ spec:
 
             return (a, d, n, l)
 
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
         def _serialize_float(float_value: float) -> str:
             if isinstance(float_value, str):
                 return float_value
@@ -160,13 +167,6 @@ spec:
                 else:
                     raise TypeError("Object of type '%s' is not JSON serializable and does not have .to_struct() method." % obj.__class__.__name__)
             return json.dumps(obj, default=default_serializer, sort_keys=True)
-
-        def _serialize_int(int_value: int) -> str:
-            if isinstance(int_value, str):
-                return int_value
-            if not isinstance(int_value, int):
-                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
-            return str(int_value)
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Ap series', description='')
@@ -221,22 +221,21 @@ spec:
           Term : {}\\nCommon Difference : {}\\nLength of Series : {}\\nLast Term :
           {}\".format(\n            a, d, n, l[-1]\n        )\n    )\n    print(\"Series
           :\")\n    for x in l:\n        print(\"{}  \".format(x), end=\" \")\n\n    return
-          (a, d, n, l)\n\ndef _serialize_float(float_value: float) -> str:\n    if
-          isinstance(float_value, str):\n        return float_value\n    if not isinstance(float_value,
-          (float, int)):\n        raise TypeError(''Value \"{}\" has type \"{}\" instead
-          of float.''.format(str(float_value), str(type(float_value))))\n    return
+          (a, d, n, l)\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
+          str):\n        return int_value\n    if not isinstance(int_value, int):\n        raise
+          TypeError(''Value \"{}\" has type \"{}\" instead of int.''.format(str(int_value),
+          str(type(int_value))))\n    return str(int_value)\n\ndef _serialize_float(float_value:
+          float) -> str:\n    if isinstance(float_value, str):\n        return float_value\n    if
+          not isinstance(float_value, (float, int)):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of float.''.format(str(float_value), str(type(float_value))))\n    return
           str(float_value)\n\ndef _serialize_json(obj) -> str:\n    if isinstance(obj,
           str):\n        return obj\n    import json\n    def default_serializer(obj):\n        if
           hasattr(obj, ''to_struct''):\n            return obj.to_struct()\n        else:\n            raise
           TypeError(\"Object of type ''%s'' is not JSON serializable and does not
           have .to_struct() method.\" % obj.__class__.__name__)\n    return json.dumps(obj,
-          default=default_serializer, sort_keys=True)\n\ndef _serialize_int(int_value:
-          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
-          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
-          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
-          str(int_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Ap
-          series'', description='''')\n_parser.add_argument(\"--a\", dest=\"a\", type=float,
-          required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--d\",
+          default=default_serializer, sort_keys=True)\n\nimport argparse\n_parser
+          = argparse.ArgumentParser(prog=''Ap series'', description='''')\n_parser.add_argument(\"--a\",
+          dest=\"a\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--d\",
           dest=\"d\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--n\",
           dest=\"n\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
           dest=\"_output_paths\", type=str, nargs=4)\n_parsed_args = vars(_parser.parse_args())\n_output_files
@@ -524,6 +523,13 @@ spec:
 
             return (a, d, n, l)
 
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
         def _serialize_float(float_value: float) -> str:
             if isinstance(float_value, str):
                 return float_value
@@ -541,13 +547,6 @@ spec:
                 else:
                     raise TypeError("Object of type '%s' is not JSON serializable and does not have .to_struct() method." % obj.__class__.__name__)
             return json.dumps(obj, default=default_serializer, sort_keys=True)
-
-        def _serialize_int(int_value: int) -> str:
-            if isinstance(int_value, str):
-                return int_value
-            if not isinstance(int_value, int):
-                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
-            return str(int_value)
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Gp series', description='')
@@ -601,22 +600,22 @@ spec:
           x in range(n):\n        l.append(a * pow(d, x))\n\n    print(\n        \"First
           Term : {}\\nCommon Ratio : {}\\nLength of Series : {}\\nLast Term : {}\".format(\n            a,
           d, n, l[-1]\n        )\n    )\n    print(\"Series :\")\n\n    for x in l:\n        print(\"{}  \".format(x),
-          end=\" \")\n\n    return (a, d, n, l)\n\ndef _serialize_float(float_value:
-          float) -> str:\n    if isinstance(float_value, str):\n        return float_value\n    if
-          not isinstance(float_value, (float, int)):\n        raise TypeError(''Value
-          \"{}\" has type \"{}\" instead of float.''.format(str(float_value), str(type(float_value))))\n    return
+          end=\" \")\n\n    return (a, d, n, l)\n\ndef _serialize_int(int_value: int)
+          -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
+          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
+          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
+          str(int_value)\n\ndef _serialize_float(float_value: float) -> str:\n    if
+          isinstance(float_value, str):\n        return float_value\n    if not isinstance(float_value,
+          (float, int)):\n        raise TypeError(''Value \"{}\" has type \"{}\" instead
+          of float.''.format(str(float_value), str(type(float_value))))\n    return
           str(float_value)\n\ndef _serialize_json(obj) -> str:\n    if isinstance(obj,
           str):\n        return obj\n    import json\n    def default_serializer(obj):\n        if
           hasattr(obj, ''to_struct''):\n            return obj.to_struct()\n        else:\n            raise
           TypeError(\"Object of type ''%s'' is not JSON serializable and does not
           have .to_struct() method.\" % obj.__class__.__name__)\n    return json.dumps(obj,
-          default=default_serializer, sort_keys=True)\n\ndef _serialize_int(int_value:
-          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
-          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
-          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
-          str(int_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Gp
-          series'', description='''')\n_parser.add_argument(\"--a\", dest=\"a\", type=float,
-          required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--d\",
+          default=default_serializer, sort_keys=True)\n\nimport argparse\n_parser
+          = argparse.ArgumentParser(prog=''Gp series'', description='''')\n_parser.add_argument(\"--a\",
+          dest=\"a\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--d\",
           dest=\"d\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--n\",
           dest=\"n\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
           dest=\"_output_paths\", type=str, nargs=4)\n_parsed_args = vars(_parser.parse_args())\n_output_files
@@ -725,8 +724,8 @@ spec:
           "n": "{{inputs.parameters.read-inputs-gp-n}}", "ser": "{{inputs.parameters.gp-series-ser}}"}'}
   - name: read-inputs-ap
     container:
-      args: [--first-term, '0', --difference, '0', --number-of-terms, '0', --find-rth-term,
-        '0', '----output-paths', /tmp/outputs/a/data, /tmp/outputs/d/data, /tmp/outputs/n/data,
+      args: [--first-term, '5', --difference, '3', --number-of-terms, '10', --find-rth-term,
+        '7', '----output-paths', /tmp/outputs/a/data, /tmp/outputs/d/data, /tmp/outputs/n/data,
         /tmp/outputs/r/data]
       command:
       - sh
@@ -745,19 +744,19 @@ spec:
             r = find_rth_term
             return (a, d, n, r)
 
-        def _serialize_float(float_value: float) -> str:
-            if isinstance(float_value, str):
-                return float_value
-            if not isinstance(float_value, (float, int)):
-                raise TypeError('Value "{}" has type "{}" instead of float.'.format(str(float_value), str(type(float_value))))
-            return str(float_value)
-
         def _serialize_int(int_value: int) -> str:
             if isinstance(int_value, str):
                 return int_value
             if not isinstance(int_value, int):
                 raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
             return str(int_value)
+
+        def _serialize_float(float_value: float) -> str:
+            if isinstance(float_value, str):
+                return float_value
+            if not isinstance(float_value, (float, int)):
+                raise TypeError('Value "{}" has type "{}" instead of float.'.format(str(float_value), str(type(float_value))))
+            return str(float_value)
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Read inputs ap', description='')
@@ -813,16 +812,16 @@ spec:
           > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n", "def read_inputs_ap(\n    first_term,
           difference, number_of_terms, find_rth_term\n):\n    a = first_term\n    d
           = difference\n    n = number_of_terms\n    r = find_rth_term\n    return
-          (a, d, n, r)\n\ndef _serialize_float(float_value: float) -> str:\n    if
-          isinstance(float_value, str):\n        return float_value\n    if not isinstance(float_value,
-          (float, int)):\n        raise TypeError(''Value \"{}\" has type \"{}\" instead
-          of float.''.format(str(float_value), str(type(float_value))))\n    return
-          str(float_value)\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
+          (a, d, n, r)\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
           str):\n        return int_value\n    if not isinstance(int_value, int):\n        raise
           TypeError(''Value \"{}\" has type \"{}\" instead of int.''.format(str(int_value),
-          str(type(int_value))))\n    return str(int_value)\n\nimport argparse\n_parser
-          = argparse.ArgumentParser(prog=''Read inputs ap'', description='''')\n_parser.add_argument(\"--first-term\",
-          dest=\"first_term\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--difference\",
+          str(type(int_value))))\n    return str(int_value)\n\ndef _serialize_float(float_value:
+          float) -> str:\n    if isinstance(float_value, str):\n        return float_value\n    if
+          not isinstance(float_value, (float, int)):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of float.''.format(str(float_value), str(type(float_value))))\n    return
+          str(float_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Read
+          inputs ap'', description='''')\n_parser.add_argument(\"--first-term\", dest=\"first_term\",
+          type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--difference\",
           dest=\"difference\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--number-of-terms\",
           dest=\"number_of_terms\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--find-rth-term\",
           dest=\"find_rth_term\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
@@ -837,11 +836,11 @@ spec:
           inputs ap", "outputs": [{"name": "a", "type": "Float"}, {"name": "d", "type":
           "Float"}, {"name": "n", "type": "Integer"}, {"name": "r", "type": "Integer"}]}',
         pipelines.kubeflow.org/component_ref: '{}', pipelines.kubeflow.org/arguments.parameters: '{"difference":
-          "0", "find_rth_term": "0", "first_term": "0", "number_of_terms": "0"}'}
+          "3", "find_rth_term": "7", "first_term": "5", "number_of_terms": "10"}'}
   - name: read-inputs-gp
     container:
-      args: [--first-term, '0', --common-ratio, '0', --number-of-terms, '0', --find-rth-term,
-        '0', '----output-paths', /tmp/outputs/a/data, /tmp/outputs/d/data, /tmp/outputs/n/data,
+      args: [--first-term, '5', --common-ratio, '2', --number-of-terms, '10', --find-rth-term,
+        '8', '----output-paths', /tmp/outputs/a/data, /tmp/outputs/d/data, /tmp/outputs/n/data,
         /tmp/outputs/r/data]
       command:
       - sh
@@ -861,19 +860,19 @@ spec:
             r = find_rth_term
             return (a, d, n, r)
 
-        def _serialize_float(float_value: float) -> str:
-            if isinstance(float_value, str):
-                return float_value
-            if not isinstance(float_value, (float, int)):
-                raise TypeError('Value "{}" has type "{}" instead of float.'.format(str(float_value), str(type(float_value))))
-            return str(float_value)
-
         def _serialize_int(int_value: int) -> str:
             if isinstance(int_value, str):
                 return int_value
             if not isinstance(int_value, int):
                 raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
             return str(int_value)
+
+        def _serialize_float(float_value: float) -> str:
+            if isinstance(float_value, str):
+                return float_value
+            if not isinstance(float_value, (float, int)):
+                raise TypeError('Value "{}" has type "{}" instead of float.'.format(str(float_value), str(type(float_value))))
+            return str(float_value)
 
         import argparse
         _parser = argparse.ArgumentParser(prog='Read inputs gp', description='')
@@ -929,16 +928,16 @@ spec:
           > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n", "def read_inputs_gp(\n    first_term,
           common_ratio, number_of_terms, find_rth_term\n):\n\n    a = first_term\n    d
           = common_ratio\n    n = number_of_terms\n    r = find_rth_term\n    return
-          (a, d, n, r)\n\ndef _serialize_float(float_value: float) -> str:\n    if
-          isinstance(float_value, str):\n        return float_value\n    if not isinstance(float_value,
-          (float, int)):\n        raise TypeError(''Value \"{}\" has type \"{}\" instead
-          of float.''.format(str(float_value), str(type(float_value))))\n    return
-          str(float_value)\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
+          (a, d, n, r)\n\ndef _serialize_int(int_value: int) -> str:\n    if isinstance(int_value,
           str):\n        return int_value\n    if not isinstance(int_value, int):\n        raise
           TypeError(''Value \"{}\" has type \"{}\" instead of int.''.format(str(int_value),
-          str(type(int_value))))\n    return str(int_value)\n\nimport argparse\n_parser
-          = argparse.ArgumentParser(prog=''Read inputs gp'', description='''')\n_parser.add_argument(\"--first-term\",
-          dest=\"first_term\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--common-ratio\",
+          str(type(int_value))))\n    return str(int_value)\n\ndef _serialize_float(float_value:
+          float) -> str:\n    if isinstance(float_value, str):\n        return float_value\n    if
+          not isinstance(float_value, (float, int)):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of float.''.format(str(float_value), str(type(float_value))))\n    return
+          str(float_value)\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Read
+          inputs gp'', description='''')\n_parser.add_argument(\"--first-term\", dest=\"first_term\",
+          type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--common-ratio\",
           dest=\"common_ratio\", type=float, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--number-of-terms\",
           dest=\"number_of_terms\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--find-rth-term\",
           dest=\"find_rth_term\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
@@ -953,15 +952,15 @@ spec:
           inputs gp", "outputs": [{"name": "a", "type": "Float"}, {"name": "d", "type":
           "Float"}, {"name": "n", "type": "Integer"}, {"name": "r", "type": "Integer"}]}',
         pipelines.kubeflow.org/component_ref: '{}', pipelines.kubeflow.org/arguments.parameters: '{"common_ratio":
-          "0", "find_rth_term": "0", "first_term": "0", "number_of_terms": "0"}'}
+          "2", "find_rth_term": "8", "first_term": "5", "number_of_terms": "10"}'}
   arguments:
     parameters:
-    - {name: in_first_term_ap, value: '0'}
-    - {name: in_common_difference_ap, value: '0'}
-    - {name: in_total_terms_ap, value: '0'}
-    - {name: in_rth_term_ap, value: '0'}
-    - {name: in_first_term_gp, value: '0'}
-    - {name: in_common_ratio_gp, value: '0'}
-    - {name: in_total_terms_gp, value: '0'}
-    - {name: in_rth_term_gp, value: '0'}
+    - {name: in_first_term_ap, value: '5'}
+    - {name: in_common_difference_ap, value: '3'}
+    - {name: in_total_terms_ap, value: '10'}
+    - {name: in_rth_term_ap, value: '7'}
+    - {name: in_first_term_gp, value: '5'}
+    - {name: in_common_ratio_gp, value: '2'}
+    - {name: in_total_terms_gp, value: '10'}
+    - {name: in_rth_term_gp, value: '8'}
   serviceAccountName: pipeline-runner
