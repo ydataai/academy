@@ -23,12 +23,33 @@ Enjoy!
 
 ### Arithmatic and Geometric Progressions
 
+Sample input files: N/A
+Sample output files: N/A
+
+Just import the lab, set the input variables and run it!
+
 ### Fibonacci
 
+Sample input files: N/A
+Sample output files: N/A
 
+Just import the lab, set the input variables and run it!
 
+### Simple and Compund Interest
 
-#### Telco Churn
+Sample input files: N/A
+Sample output files: N/A
+
+Just import the lab, set the input variables and run it!
+
+### Simple and compund interest
+
+Sample input files: N/A
+Sample output files: N/A
+
+Just import the lab, set the input variables and run it!
+
+### Telco Churn
 
 ##### Create a new gcp bucket: https://cloud.google.com/storage/docs/creating-buckets
 
