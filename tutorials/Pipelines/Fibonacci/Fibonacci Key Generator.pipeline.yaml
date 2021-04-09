@@ -1,0 +1,863 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: generates-key-based-on-local-time-and-fibonacci-sequences-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.4.0, pipelines.kubeflow.org/pipeline_compilation_time: '2021-02-25T16:01:13.635680',
+    pipelines.kubeflow.org/pipeline_spec: '{"description": "Generates key based on
+      Local Time and Fibonacci Sequences", "name": "Generates key based on Local Time
+      and Fibonacci Sequences"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.4.0}
+spec:
+  entrypoint: generates-key-based-on-local-time-and-fibonacci-sequences
+  templates:
+  - name: generates-key-based-on-local-time-and-fibonacci-sequences
+    dag:
+      tasks:
+      - name: key-decode
+        template: key-decode
+        dependencies: [key-gen, key-gen-2]
+        arguments:
+          parameters:
+          - {name: key-gen-2-outkey, value: '{{tasks.key-gen-2.outputs.parameters.key-gen-2-outkey}}'}
+          - {name: key-gen-token, value: '{{tasks.key-gen.outputs.parameters.key-gen-token}}'}
+      - name: key-decode-2
+        template: key-decode-2
+        dependencies: [key-gen-2, key-gen-3]
+        arguments:
+          parameters:
+          - {name: key-gen-2-token, value: '{{tasks.key-gen-2.outputs.parameters.key-gen-2-token}}'}
+          - {name: key-gen-3-outkey, value: '{{tasks.key-gen-3.outputs.parameters.key-gen-3-outkey}}'}
+      - name: key-decode-3
+        template: key-decode-3
+        dependencies: [key-gen-2, key-gen-3]
+        arguments:
+          parameters:
+          - {name: key-gen-2-outkey, value: '{{tasks.key-gen-2.outputs.parameters.key-gen-2-outkey}}'}
+          - {name: key-gen-3-token, value: '{{tasks.key-gen-3.outputs.parameters.key-gen-3-token}}'}
+      - name: key-gen
+        template: key-gen
+        dependencies: [token-generator]
+        arguments:
+          parameters:
+          - {name: token-generator-Output, value: '{{tasks.token-generator.outputs.parameters.token-generator-Output}}'}
+      - name: key-gen-2
+        template: key-gen-2
+        dependencies: [token-generator]
+        arguments:
+          parameters:
+          - {name: token-generator-Output, value: '{{tasks.token-generator.outputs.parameters.token-generator-Output}}'}
+      - name: key-gen-3
+        template: key-gen-3
+        dependencies: [token-generator-two]
+        arguments:
+          parameters:
+          - {name: token-generator-two-Output, value: '{{tasks.token-generator-two.outputs.parameters.token-generator-two-Output}}'}
+      - {name: token-generator, template: token-generator}
+      - {name: token-generator-two, template: token-generator-two}
+  - name: key-decode
+    container:
+      args: [--tok, '{{inputs.parameters.key-gen-token}}', --seq-two, '{{inputs.parameters.key-gen-2-outkey}}',
+        '----output-paths', /tmp/outputs/Output/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def key_decode(tok, seq_two):
+            def fib_generate(a, s):
+                p = 0
+                q = s
+                r = s
+                for x in range(a - 1):
+                    r = p + q
+                    p = q
+                    q = r
+                return r
+
+            def fib_decode(f, s):
+                x = 0
+                y = fib_generate(0, s)
+                while f >= fib_generate(x, s):
+                    y = fib_generate(x, s)
+                    x += 1
+                return y
+
+            if fib_decode(seq_two, int(tok[0]) + 1) == seq_two:
+                print("Keys match")
+                out_str = "Keys Match"
+            else:
+                print("Keys don't match")
+                out_str = "Keys Don't Match"
+
+            return out_str
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Key decode', description='')
+        _parser.add_argument("--tok", dest="tok", type=str, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--seq-two", dest="seq_two", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = key_decode(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    inputs:
+      parameters:
+      - {name: key-gen-2-outkey}
+      - {name: key-gen-token}
+    outputs:
+      artifacts:
+      - {name: key-decode-Output, path: /tmp/outputs/Output/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--tok", {"inputValue": "tok"}, "--seq-two", {"inputValue": "seq_two"},
+          "----output-paths", {"outputPath": "Output"}], "command": ["sh", "-ec",
+          "program_path=$(mktemp)\nprintf \"%s\" \"$0\" > \"$program_path\"\npython3
+          -u \"$program_path\" \"$@\"\n", "def key_decode(tok, seq_two):\n    def
+          fib_generate(a, s):\n        p = 0\n        q = s\n        r = s\n        for
+          x in range(a - 1):\n            r = p + q\n            p = q\n            q
+          = r\n        return r\n\n    def fib_decode(f, s):\n        x = 0\n        y
+          = fib_generate(0, s)\n        while f >= fib_generate(x, s):\n            y
+          = fib_generate(x, s)\n            x += 1\n        return y\n\n    if fib_decode(seq_two,
+          int(tok[0]) + 1) == seq_two:\n        print(\"Keys match\")\n        out_str
+          = \"Keys Match\"\n    else:\n        print(\"Keys don''t match\")\n        out_str
+          = \"Keys Don''t Match\"\n\n    return out_str\n\ndef _serialize_str(str_value:
+          str) -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
+          decode'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
+          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--seq-two\",
+          dest=\"seq_two\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=1)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_decode(**_parsed_args)\n\n_outputs
+          = [_outputs]\n\n_output_serializers = [\n    _serialize_str,\n\n]\n\nimport
+          os\nfor idx, output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "inputs": [{"name": "tok", "type": "String"}, {"name":
+          "seq_two", "type": "Integer"}], "name": "Key decode", "outputs": [{"name":
+          "Output", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}',
+        pipelines.kubeflow.org/arguments.parameters: '{"seq_two": "{{inputs.parameters.key-gen-2-outkey}}",
+          "tok": "{{inputs.parameters.key-gen-token}}"}'}
+  - name: key-decode-2
+    container:
+      args: [--tok, '{{inputs.parameters.key-gen-2-token}}', --seq-two, '{{inputs.parameters.key-gen-3-outkey}}',
+        '----output-paths', /tmp/outputs/Output/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def key_decode(tok, seq_two):
+            def fib_generate(a, s):
+                p = 0
+                q = s
+                r = s
+                for x in range(a - 1):
+                    r = p + q
+                    p = q
+                    q = r
+                return r
+
+            def fib_decode(f, s):
+                x = 0
+                y = fib_generate(0, s)
+                while f >= fib_generate(x, s):
+                    y = fib_generate(x, s)
+                    x += 1
+                return y
+
+            if fib_decode(seq_two, int(tok[0]) + 1) == seq_two:
+                print("Keys match")
+                out_str = "Keys Match"
+            else:
+                print("Keys don't match")
+                out_str = "Keys Don't Match"
+
+            return out_str
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Key decode', description='')
+        _parser.add_argument("--tok", dest="tok", type=str, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--seq-two", dest="seq_two", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = key_decode(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    inputs:
+      parameters:
+      - {name: key-gen-2-token}
+      - {name: key-gen-3-outkey}
+    outputs:
+      artifacts:
+      - {name: key-decode-2-Output, path: /tmp/outputs/Output/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--tok", {"inputValue": "tok"}, "--seq-two", {"inputValue": "seq_two"},
+          "----output-paths", {"outputPath": "Output"}], "command": ["sh", "-ec",
+          "program_path=$(mktemp)\nprintf \"%s\" \"$0\" > \"$program_path\"\npython3
+          -u \"$program_path\" \"$@\"\n", "def key_decode(tok, seq_two):\n    def
+          fib_generate(a, s):\n        p = 0\n        q = s\n        r = s\n        for
+          x in range(a - 1):\n            r = p + q\n            p = q\n            q
+          = r\n        return r\n\n    def fib_decode(f, s):\n        x = 0\n        y
+          = fib_generate(0, s)\n        while f >= fib_generate(x, s):\n            y
+          = fib_generate(x, s)\n            x += 1\n        return y\n\n    if fib_decode(seq_two,
+          int(tok[0]) + 1) == seq_two:\n        print(\"Keys match\")\n        out_str
+          = \"Keys Match\"\n    else:\n        print(\"Keys don''t match\")\n        out_str
+          = \"Keys Don''t Match\"\n\n    return out_str\n\ndef _serialize_str(str_value:
+          str) -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
+          decode'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
+          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--seq-two\",
+          dest=\"seq_two\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=1)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_decode(**_parsed_args)\n\n_outputs
+          = [_outputs]\n\n_output_serializers = [\n    _serialize_str,\n\n]\n\nimport
+          os\nfor idx, output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "inputs": [{"name": "tok", "type": "String"}, {"name":
+          "seq_two", "type": "Integer"}], "name": "Key decode", "outputs": [{"name":
+          "Output", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}',
+        pipelines.kubeflow.org/arguments.parameters: '{"seq_two": "{{inputs.parameters.key-gen-3-outkey}}",
+          "tok": "{{inputs.parameters.key-gen-2-token}}"}'}
+  - name: key-decode-3
+    container:
+      args: [--tok, '{{inputs.parameters.key-gen-3-token}}', --seq-two, '{{inputs.parameters.key-gen-2-outkey}}',
+        '----output-paths', /tmp/outputs/Output/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def key_decode(tok, seq_two):
+            def fib_generate(a, s):
+                p = 0
+                q = s
+                r = s
+                for x in range(a - 1):
+                    r = p + q
+                    p = q
+                    q = r
+                return r
+
+            def fib_decode(f, s):
+                x = 0
+                y = fib_generate(0, s)
+                while f >= fib_generate(x, s):
+                    y = fib_generate(x, s)
+                    x += 1
+                return y
+
+            if fib_decode(seq_two, int(tok[0]) + 1) == seq_two:
+                print("Keys match")
+                out_str = "Keys Match"
+            else:
+                print("Keys don't match")
+                out_str = "Keys Don't Match"
+
+            return out_str
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Key decode', description='')
+        _parser.add_argument("--tok", dest="tok", type=str, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("--seq-two", dest="seq_two", type=int, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = key_decode(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    inputs:
+      parameters:
+      - {name: key-gen-2-outkey}
+      - {name: key-gen-3-token}
+    outputs:
+      artifacts:
+      - {name: key-decode-3-Output, path: /tmp/outputs/Output/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--tok", {"inputValue": "tok"}, "--seq-two", {"inputValue": "seq_two"},
+          "----output-paths", {"outputPath": "Output"}], "command": ["sh", "-ec",
+          "program_path=$(mktemp)\nprintf \"%s\" \"$0\" > \"$program_path\"\npython3
+          -u \"$program_path\" \"$@\"\n", "def key_decode(tok, seq_two):\n    def
+          fib_generate(a, s):\n        p = 0\n        q = s\n        r = s\n        for
+          x in range(a - 1):\n            r = p + q\n            p = q\n            q
+          = r\n        return r\n\n    def fib_decode(f, s):\n        x = 0\n        y
+          = fib_generate(0, s)\n        while f >= fib_generate(x, s):\n            y
+          = fib_generate(x, s)\n            x += 1\n        return y\n\n    if fib_decode(seq_two,
+          int(tok[0]) + 1) == seq_two:\n        print(\"Keys match\")\n        out_str
+          = \"Keys Match\"\n    else:\n        print(\"Keys don''t match\")\n        out_str
+          = \"Keys Don''t Match\"\n\n    return out_str\n\ndef _serialize_str(str_value:
+          str) -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
+          decode'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
+          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"--seq-two\",
+          dest=\"seq_two\", type=int, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=1)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_decode(**_parsed_args)\n\n_outputs
+          = [_outputs]\n\n_output_serializers = [\n    _serialize_str,\n\n]\n\nimport
+          os\nfor idx, output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "inputs": [{"name": "tok", "type": "String"}, {"name":
+          "seq_two", "type": "Integer"}], "name": "Key decode", "outputs": [{"name":
+          "Output", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}',
+        pipelines.kubeflow.org/arguments.parameters: '{"seq_two": "{{inputs.parameters.key-gen-2-outkey}}",
+          "tok": "{{inputs.parameters.key-gen-3-token}}"}'}
+  - name: key-gen
+    container:
+      args: [--tok, '{{inputs.parameters.token-generator-Output}}', '----output-paths',
+        /tmp/outputs/outkey/data, /tmp/outputs/token/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def key_gen(tok):
+
+            tok = str(tok)
+
+            def fib_generate(a, s):
+                p = 0
+                q = s
+                r = s
+                for x in range(a - 1):
+                    r = p + q
+                    p = q
+                    q = r
+                return r
+
+            out_key = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)
+            print("Generated key {}".format(out_key))
+            return (out_key, tok)
+
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Key gen', description='')
+        _parser.add_argument("--tok", dest="tok", type=str, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = key_gen(**_parsed_args)
+
+        _output_serializers = [
+            _serialize_int,
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    inputs:
+      parameters:
+      - {name: token-generator-Output}
+    outputs:
+      parameters:
+      - name: key-gen-token
+        valueFrom: {path: /tmp/outputs/token/data}
+      artifacts:
+      - {name: key-gen-outkey, path: /tmp/outputs/outkey/data}
+      - {name: key-gen-token, path: /tmp/outputs/token/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--tok", {"inputValue": "tok"}, "----output-paths", {"outputPath":
+          "outkey"}, {"outputPath": "token"}], "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf
+          \"%s\" \"$0\" > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n",
+          "def key_gen(tok):\n\n    tok = str(tok)\n\n    def fib_generate(a, s):\n        p
+          = 0\n        q = s\n        r = s\n        for x in range(a - 1):\n            r
+          = p + q\n            p = q\n            q = r\n        return r\n\n    out_key
+          = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)\n    print(\"Generated
+          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_int(int_value:
+          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
+          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
+          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
+          str(int_value)\n\ndef _serialize_str(str_value: str) -> str:\n    if not
+          isinstance(str_value, str):\n        raise TypeError(''Value \"{}\" has
+          type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
+          gen'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
+          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=2)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_gen(**_parsed_args)\n\n_output_serializers
+          = [\n    _serialize_int,\n    _serialize_str,\n\n]\n\nimport os\nfor idx,
+          output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "inputs": [{"name": "tok", "type": "String"}],
+          "name": "Key gen", "outputs": [{"name": "outkey", "type": "Integer"}, {"name":
+          "token", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}',
+        pipelines.kubeflow.org/arguments.parameters: '{"tok": "{{inputs.parameters.token-generator-Output}}"}'}
+  - name: key-gen-2
+    container:
+      args: [--tok, '{{inputs.parameters.token-generator-Output}}', '----output-paths',
+        /tmp/outputs/outkey/data, /tmp/outputs/token/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def key_gen(tok):
+
+            tok = str(tok)
+
+            def fib_generate(a, s):
+                p = 0
+                q = s
+                r = s
+                for x in range(a - 1):
+                    r = p + q
+                    p = q
+                    q = r
+                return r
+
+            out_key = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)
+            print("Generated key {}".format(out_key))
+            return (out_key, tok)
+
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Key gen', description='')
+        _parser.add_argument("--tok", dest="tok", type=str, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = key_gen(**_parsed_args)
+
+        _output_serializers = [
+            _serialize_int,
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    inputs:
+      parameters:
+      - {name: token-generator-Output}
+    outputs:
+      parameters:
+      - name: key-gen-2-outkey
+        valueFrom: {path: /tmp/outputs/outkey/data}
+      - name: key-gen-2-token
+        valueFrom: {path: /tmp/outputs/token/data}
+      artifacts:
+      - {name: key-gen-2-outkey, path: /tmp/outputs/outkey/data}
+      - {name: key-gen-2-token, path: /tmp/outputs/token/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--tok", {"inputValue": "tok"}, "----output-paths", {"outputPath":
+          "outkey"}, {"outputPath": "token"}], "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf
+          \"%s\" \"$0\" > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n",
+          "def key_gen(tok):\n\n    tok = str(tok)\n\n    def fib_generate(a, s):\n        p
+          = 0\n        q = s\n        r = s\n        for x in range(a - 1):\n            r
+          = p + q\n            p = q\n            q = r\n        return r\n\n    out_key
+          = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)\n    print(\"Generated
+          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_int(int_value:
+          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
+          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
+          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
+          str(int_value)\n\ndef _serialize_str(str_value: str) -> str:\n    if not
+          isinstance(str_value, str):\n        raise TypeError(''Value \"{}\" has
+          type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
+          gen'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
+          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=2)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_gen(**_parsed_args)\n\n_output_serializers
+          = [\n    _serialize_int,\n    _serialize_str,\n\n]\n\nimport os\nfor idx,
+          output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "inputs": [{"name": "tok", "type": "String"}],
+          "name": "Key gen", "outputs": [{"name": "outkey", "type": "Integer"}, {"name":
+          "token", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}',
+        pipelines.kubeflow.org/arguments.parameters: '{"tok": "{{inputs.parameters.token-generator-Output}}"}'}
+  - name: key-gen-3
+    container:
+      args: [--tok, '{{inputs.parameters.token-generator-two-Output}}', '----output-paths',
+        /tmp/outputs/outkey/data, /tmp/outputs/token/data]
+      command:
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def key_gen(tok):
+
+            tok = str(tok)
+
+            def fib_generate(a, s):
+                p = 0
+                q = s
+                r = s
+                for x in range(a - 1):
+                    r = p + q
+                    p = q
+                    q = r
+                return r
+
+            out_key = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)
+            print("Generated key {}".format(out_key))
+            return (out_key, tok)
+
+        def _serialize_int(int_value: int) -> str:
+            if isinstance(int_value, str):
+                return int_value
+            if not isinstance(int_value, int):
+                raise TypeError('Value "{}" has type "{}" instead of int.'.format(str(int_value), str(type(int_value))))
+            return str(int_value)
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Key gen', description='')
+        _parser.add_argument("--tok", dest="tok", type=str, required=True, default=argparse.SUPPRESS)
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=2)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = key_gen(**_parsed_args)
+
+        _output_serializers = [
+            _serialize_int,
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    inputs:
+      parameters:
+      - {name: token-generator-two-Output}
+    outputs:
+      parameters:
+      - name: key-gen-3-outkey
+        valueFrom: {path: /tmp/outputs/outkey/data}
+      - name: key-gen-3-token
+        valueFrom: {path: /tmp/outputs/token/data}
+      artifacts:
+      - {name: key-gen-3-outkey, path: /tmp/outputs/outkey/data}
+      - {name: key-gen-3-token, path: /tmp/outputs/token/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["--tok", {"inputValue": "tok"}, "----output-paths", {"outputPath":
+          "outkey"}, {"outputPath": "token"}], "command": ["sh", "-ec", "program_path=$(mktemp)\nprintf
+          \"%s\" \"$0\" > \"$program_path\"\npython3 -u \"$program_path\" \"$@\"\n",
+          "def key_gen(tok):\n\n    tok = str(tok)\n\n    def fib_generate(a, s):\n        p
+          = 0\n        q = s\n        r = s\n        for x in range(a - 1):\n            r
+          = p + q\n            p = q\n            q = r\n        return r\n\n    out_key
+          = fib_generate(int(str(tok[1]) + str(tok[3])), int(tok[0]) + 1)\n    print(\"Generated
+          key {}\".format(out_key))\n    return (out_key, tok)\n\ndef _serialize_int(int_value:
+          int) -> str:\n    if isinstance(int_value, str):\n        return int_value\n    if
+          not isinstance(int_value, int):\n        raise TypeError(''Value \"{}\"
+          has type \"{}\" instead of int.''.format(str(int_value), str(type(int_value))))\n    return
+          str(int_value)\n\ndef _serialize_str(str_value: str) -> str:\n    if not
+          isinstance(str_value, str):\n        raise TypeError(''Value \"{}\" has
+          type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Key
+          gen'', description='''')\n_parser.add_argument(\"--tok\", dest=\"tok\",
+          type=str, required=True, default=argparse.SUPPRESS)\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=2)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = key_gen(**_parsed_args)\n\n_output_serializers
+          = [\n    _serialize_int,\n    _serialize_str,\n\n]\n\nimport os\nfor idx,
+          output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "inputs": [{"name": "tok", "type": "String"}],
+          "name": "Key gen", "outputs": [{"name": "outkey", "type": "Integer"}, {"name":
+          "token", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}',
+        pipelines.kubeflow.org/arguments.parameters: '{"tok": "{{inputs.parameters.token-generator-two-Output}}"}'}
+  - name: token-generator
+    container:
+      args: ['----output-paths', /tmp/outputs/Output/data]
+      command:
+      - sh
+      - -c
+      - (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location
+        'datetime' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet
+        --no-warn-script-location 'datetime' --user) && "$0" "$@"
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def token_generator():
+            from datetime import datetime
+
+            now = datetime.now()
+            token = now.strftime("%H%M")
+            while len(token) < 4:
+                token = str(0) + str(token)
+            return token
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Token generator', description='')
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = token_generator(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    outputs:
+      parameters:
+      - name: token-generator-Output
+        valueFrom: {path: /tmp/outputs/Output/data}
+      artifacts:
+      - {name: token-generator-Output, path: /tmp/outputs/Output/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["----output-paths", {"outputPath": "Output"}], "command": ["sh",
+          "-c", "(PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location
+          ''datetime'' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet
+          --no-warn-script-location ''datetime'' --user) && \"$0\" \"$@\"", "sh",
+          "-ec", "program_path=$(mktemp)\nprintf \"%s\" \"$0\" > \"$program_path\"\npython3
+          -u \"$program_path\" \"$@\"\n", "def token_generator():\n    from datetime
+          import datetime\n\n    now = datetime.now()\n    token = now.strftime(\"%H%M\")\n    while
+          len(token) < 4:\n        token = str(0) + str(token)\n    return token\n\ndef
+          _serialize_str(str_value: str) -> str:\n    if not isinstance(str_value,
+          str):\n        raise TypeError(''Value \"{}\" has type \"{}\" instead of
+          str.''.format(str(str_value), str(type(str_value))))\n    return str_value\n\nimport
+          argparse\n_parser = argparse.ArgumentParser(prog=''Token generator'', description='''')\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=1)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = token_generator(**_parsed_args)\n\n_outputs
+          = [_outputs]\n\n_output_serializers = [\n    _serialize_str,\n\n]\n\nimport
+          os\nfor idx, output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "name": "Token generator", "outputs": [{"name":
+          "Output", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}'}
+  - name: token-generator-two
+    container:
+      args: ['----output-paths', /tmp/outputs/Output/data]
+      command:
+      - sh
+      - -c
+      - (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location
+        'datetime' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet
+        --no-warn-script-location 'datetime' --user) && "$0" "$@"
+      - sh
+      - -ec
+      - |
+        program_path=$(mktemp)
+        printf "%s" "$0" > "$program_path"
+        python3 -u "$program_path" "$@"
+      - |
+        def token_generator_two():
+            from datetime import datetime
+
+            now = datetime.now()
+            token = now.strftime("%H%M")
+            token = int(token) + 7
+            while len(str(token)) < 4:
+                token = str(0) + str(token)
+            return str(token)
+
+        def _serialize_str(str_value: str) -> str:
+            if not isinstance(str_value, str):
+                raise TypeError('Value "{}" has type "{}" instead of str.'.format(str(str_value), str(type(str_value))))
+            return str_value
+
+        import argparse
+        _parser = argparse.ArgumentParser(prog='Token generator two', description='')
+        _parser.add_argument("----output-paths", dest="_output_paths", type=str, nargs=1)
+        _parsed_args = vars(_parser.parse_args())
+        _output_files = _parsed_args.pop("_output_paths", [])
+
+        _outputs = token_generator_two(**_parsed_args)
+
+        _outputs = [_outputs]
+
+        _output_serializers = [
+            _serialize_str,
+
+        ]
+
+        import os
+        for idx, output_file in enumerate(_output_files):
+            try:
+                os.makedirs(os.path.dirname(output_file))
+            except OSError:
+                pass
+            with open(output_file, 'w') as f:
+                f.write(_output_serializers[idx](_outputs[idx]))
+      image: python:3.7
+    outputs:
+      parameters:
+      - name: token-generator-two-Output
+        valueFrom: {path: /tmp/outputs/Output/data}
+      artifacts:
+      - {name: token-generator-two-Output, path: /tmp/outputs/Output/data}
+    metadata:
+      annotations: {pipelines.kubeflow.org/component_spec: '{"implementation": {"container":
+          {"args": ["----output-paths", {"outputPath": "Output"}], "command": ["sh",
+          "-c", "(PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location
+          ''datetime'' || PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet
+          --no-warn-script-location ''datetime'' --user) && \"$0\" \"$@\"", "sh",
+          "-ec", "program_path=$(mktemp)\nprintf \"%s\" \"$0\" > \"$program_path\"\npython3
+          -u \"$program_path\" \"$@\"\n", "def token_generator_two():\n    from datetime
+          import datetime\n\n    now = datetime.now()\n    token = now.strftime(\"%H%M\")\n    token
+          = int(token) + 7\n    while len(str(token)) < 4:\n        token = str(0)
+          + str(token)\n    return str(token)\n\ndef _serialize_str(str_value: str)
+          -> str:\n    if not isinstance(str_value, str):\n        raise TypeError(''Value
+          \"{}\" has type \"{}\" instead of str.''.format(str(str_value), str(type(str_value))))\n    return
+          str_value\n\nimport argparse\n_parser = argparse.ArgumentParser(prog=''Token
+          generator two'', description='''')\n_parser.add_argument(\"----output-paths\",
+          dest=\"_output_paths\", type=str, nargs=1)\n_parsed_args = vars(_parser.parse_args())\n_output_files
+          = _parsed_args.pop(\"_output_paths\", [])\n\n_outputs = token_generator_two(**_parsed_args)\n\n_outputs
+          = [_outputs]\n\n_output_serializers = [\n    _serialize_str,\n\n]\n\nimport
+          os\nfor idx, output_file in enumerate(_output_files):\n    try:\n        os.makedirs(os.path.dirname(output_file))\n    except
+          OSError:\n        pass\n    with open(output_file, ''w'') as f:\n        f.write(_output_serializers[idx](_outputs[idx]))\n"],
+          "image": "python:3.7"}}, "name": "Token generator two", "outputs": [{"name":
+          "Output", "type": "String"}]}', pipelines.kubeflow.org/component_ref: '{}'}
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
