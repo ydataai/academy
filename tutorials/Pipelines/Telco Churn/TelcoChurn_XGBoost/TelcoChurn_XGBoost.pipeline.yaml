@@ -109,7 +109,7 @@ spec:
             fig = plt.gcf()
             s = mpld3.fig_to_html(fig)
 
-            with file_io.FileIO(in_gcp_bucket_output_path + "Graphs/churn_plot.html", "w") as f:
+            with file_io.FileIO(in_gcp_bucket_output_path + "Artifacts/Graphs/churn_plot.html", "w") as f:
                 f.write(s)
 
             def barplot_percentages(feature, orient="v", axis_name="percentage of customers"):
@@ -307,7 +307,7 @@ spec:
           = df[\"TotalCharges\"].replace(\" \", 0).astype(\"float32\")\n\n    # Churn
           Plot\n    ax = sns.catplot(\n        y=\"Churn\",\n        kind=\"count\",\n        data=df,\n        height=2.0,\n        aspect=3.0,\n        palette=\"bright\",\n        legend=True,\n    )\n\n    fig
           = plt.gcf()\n    s = mpld3.fig_to_html(fig)\n\n    with file_io.FileIO(in_gcp_bucket_output_path
-          + \"Graphs/churn_plot.html\", \"w\") as f:\n        f.write(s)\n\n    def
+          + \"Artifacts/Graphs/churn_plot.html\", \"w\") as f:\n        f.write(s)\n\n    def
           barplot_percentages(feature, orient=\"v\", axis_name=\"percentage of customers\"):\n        ratios
           = pd.DataFrame()\n        g = df.groupby(feature)[\"Churn\"].value_counts().to_frame()\n        g
           = g.rename({\"Churn\": axis_name}, axis=1).reset_index()\n        g[axis_name]
@@ -1324,7 +1324,7 @@ spec:
                             {"name": "count", "type": "NUMBER"},
                         ],
                         "source": in_gcp_bucket_output_path
-                        + "Artifacts/Conf_matXGB.csv",  # conf_matr
+                        + "Artifacts/XGBConf_mat.csv",  # conf_matr
                         # Convert flags to string because for bealean values we want "True|False" to match csv data.
                         "labels": flag_list,
                     },
@@ -1337,7 +1337,7 @@ spec:
                             {"name": "tpr", "type": "NUMBER"},
                             {"name": "thresholds", "type": "NUMBER"},
                         ],
-                        "source": in_gcp_bucket_output_path + "Artifacts/ROC_curveXGB.csv",
+                        "source": in_gcp_bucket_output_path + "Artifacts/XGBROC_curve.csv",
                     },
                 ],
             }
@@ -1484,7 +1484,7 @@ spec:
           [\n                    {\"name\": \"target\", \"type\": \"CATEGORY\"},\n                    {\"name\":
           \"predicted\", \"type\": \"CATEGORY\"},\n                    {\"name\":
           \"count\", \"type\": \"NUMBER\"},\n                ],\n                \"source\":
-          in_gcp_bucket_output_path\n                + \"Artifacts/Conf_matXGB.csv\",  #
+          in_gcp_bucket_output_path\n                + \"Artifacts/XGBConf_mat.csv\",  #
           conf_matr\n                # Convert flags to string because for bealean
           values we want \"True|False\" to match csv data.\n                \"labels\":
           flag_list,\n            },\n            {\n                \"type\": \"roc\",\n                \"format\":
@@ -1492,7 +1492,7 @@ spec:
           [\n                    {\"name\": \"fpr\", \"type\": \"NUMBER\"},\n                    {\"name\":
           \"tpr\", \"type\": \"NUMBER\"},\n                    {\"name\": \"thresholds\",
           \"type\": \"NUMBER\"},\n                ],\n                \"source\":
-          in_gcp_bucket_output_path + \"Artifacts/ROC_curveXGB.csv\",\n            },\n        ],\n    }\n\n    with
+          in_gcp_bucket_output_path + \"Artifacts/XGBROC_curve.csv\",\n            },\n        ],\n    }\n\n    with
           file_io.FileIO(\"/mlpipeline-ui-metadata.json\", \"w\") as f:\n        json.dump(metadata,
           f)\n\n    with file_io.FileIO(mlpipeline_ui_metadata, \"w\") as f:\n        json.dump(metadata,
           f)\n\n    metrics = {\n        \"metrics\": [\n            {\n                \"name\":
