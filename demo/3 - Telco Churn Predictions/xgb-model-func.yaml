@@ -1,0 +1,263 @@
+name: Xgb model
+inputs:
+- {name: df_churn_ip}
+- {name: n_estimators, type: Integer}
+- {name: verbosity, type: Integer}
+- {name: max_depth, type: Integer}
+- {name: eta, type: Integer}
+- {name: silent, type: Integer}
+- {name: in_gcp_bucket_project, type: String}
+- {name: in_gcp_sa_json, type: JsonObject}
+- {name: in_gcp_bucket_output_path, type: String}
+outputs:
+- {name: conf_matr}
+- {name: mlpipeline_ui_metadata}
+- {name: mlpipeline_metrics}
+implementation:
+  container:
+    image: python:3.7
+    command:
+    - sh
+    - -c
+    - (PIP_DISABLE_PIP_VERSION_CHECK=1 python3 -m pip install --quiet --no-warn-script-location
+      'scikit-learn==0.22.2' 'numpy==1.17.2' 'pandas==1.0.3' 'xgboost==1.0.2' 'gcsfs'
+      'tensorflow==2.2.0' 'seaborn==0.9.0' 'matplotlib==3.1.1' 'mpld3==0.5.1' || PIP_DISABLE_PIP_VERSION_CHECK=1
+      python3 -m pip install --quiet --no-warn-script-location 'scikit-learn==0.22.2'
+      'numpy==1.17.2' 'pandas==1.0.3' 'xgboost==1.0.2' 'gcsfs' 'tensorflow==2.2.0'
+      'seaborn==0.9.0' 'matplotlib==3.1.1' 'mpld3==0.5.1' --user) && "$0" "$@"
+    - sh
+    - -ec
+    - |
+      program_path=$(mktemp)
+      printf "%s" "$0" > "$program_path"
+      python3 -u "$program_path" "$@"
+    - |
+      def _make_parent_dirs_and_return_path(file_path: str):
+          import os
+          os.makedirs(os.path.dirname(file_path), exist_ok=True)
+          return file_path
+
+      def xgb_model(
+          df_churn_ip,
+          n_estimators,
+          verbosity,
+          max_depth,
+          eta,
+          silent,
+          conf_matr,
+          mlpipeline_ui_metadata,
+          in_gcp_bucket_project,
+          in_gcp_sa_json,
+          in_gcp_bucket_output_path,
+          mlpipeline_metrics,
+      ):
+
+          import pandas as pd
+          import numpy as np
+          import xgboost as xgb
+          import json
+          import os
+          import io
+          import gcsfs
+          from tensorflow.python.lib.io import file_io
+          from sklearn.model_selection import train_test_split
+          from sklearn.metrics import (
+              confusion_matrix,
+              accuracy_score,
+              roc_auc_score,
+              roc_curve,
+              precision_score,
+              recall_score,
+              f1_score,
+          )
+
+          os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/gcp_sa.json"
+
+          # include slash at the end of path
+          if not in_gcp_bucket_output_path.endswith("/") : in_gcp_bucket_output_path+= "/";
+
+          with io.open("gcp_sa.json", "w", encoding="utf-8") as f:
+              json.dump(in_gcp_sa_json, f, ensure_ascii=False)
+
+          df_churn = pd.read_csv(df_churn_ip)
+          df_churn.dropna(inplace=True)
+
+          y1 = df_churn["Churn"]
+          X1 = df_churn.drop(["Churn"], axis=1)
+
+          X_train, X_test, y_train, y_test = train_test_split(X1, y1, random_state=0)
+
+          clfxg = xgb.XGBClassifier(
+              objective="binary:logistic", verbosity=0, max_depth=2, eta=1, silent=0
+          )
+          clfxg.fit(X_train, y_train)
+
+          y_test_pred = clfxg.predict(X_test)
+
+          y_test_proba = clfxg.predict_proba(X_test)[:, 0]
+
+          xgb_score = float("%.4f" % accuracy_score(y_test, y_test_pred))
+          xgb_precision = float("%.4f" % precision_score(y_test, y_test_pred))
+          xgb_recall = float("%.4f" % recall_score(y_test, y_test_pred))
+          xgb_f1 = float("%.4f" % f1_score(y_test, y_test_pred))
+
+          print("Accuracy, Precision, Recall, f1: ")
+          print(xgb_score, xgb_precision, xgb_recall, xgb_f1)
+
+          cm = confusion_matrix(y_test, y_test_pred)
+          print("Confusion Matrix: {}".format(cm))
+
+          fpr, tpr, thresholds = roc_curve(y_test, y_test_proba)
+          auc_score = float("%.4f" % roc_auc_score(y_test, y_test_proba))
+          print("Auc score: ")
+          print(auc_score)
+
+          # Converting the matrix to a Dataframe
+          flags = {0: "Not Churned", 1: "Churned"}
+          flag_list = ["Not Churned", "Churned"]
+          data = []
+          for target_index, target_row in enumerate(cm):
+              for predicted_index, count in enumerate(target_row):
+                  data.append((flags[target_index], flags[predicted_index], count))
+
+          df_cm = pd.DataFrame(data, columns=["target", "predicted", "count"])
+          print(df_cm)
+
+          with file_io.FileIO(conf_matr, "w") as f:
+              df_cm.to_csv(
+                  f, columns=["target", "predicted", "count"], header=False, index=False
+              )
+
+          fs = gcsfs.GCSFileSystem(project=in_gcp_bucket_project)
+
+          with file_io.FileIO(in_gcp_bucket_output_path + "Artifacts/XGBConf_mat.csv", "w") as f:
+              df_cm.to_csv(
+                  f, columns=["target", "predicted", "count"], header=False, index=False
+              )
+
+          # roc curve
+          df_roc = pd.DataFrame({"fpr": fpr, "tpr": tpr, "thresholds": thresholds})
+          with file_io.FileIO(in_gcp_bucket_output_path + "Artifacts/XGBROC_curve.csv", "w") as f:
+              df_roc.to_csv(
+                  f, columns=["fpr", "tpr", "thresholds"], header=False, index=False
+              )
+
+          # code to generate artifacts
+
+          # Artifact generator - metadata
+          metadata = {
+              "version": 1,
+              "outputs": [
+                  {
+                      "type": "confusion_matrix",
+                      "format": "csv",
+                      "storage": "gcs",
+                      "schema": [
+                          {"name": "target", "type": "CATEGORY"},
+                          {"name": "predicted", "type": "CATEGORY"},
+                          {"name": "count", "type": "NUMBER"},
+                      ],
+                      "source": in_gcp_bucket_output_path
+                      + "Artifacts/Conf_matXGB.csv",  # conf_matr
+                      # Convert flags to string because for bealean values we want "True|False" to match csv data.
+                      "labels": flag_list,
+                  },
+                  {
+                      "type": "roc",
+                      "format": "csv",
+                      "storage": "gcs",
+                      "schema": [
+                          {"name": "fpr", "type": "NUMBER"},
+                          {"name": "tpr", "type": "NUMBER"},
+                          {"name": "thresholds", "type": "NUMBER"},
+                      ],
+                      "source": in_gcp_bucket_output_path + "Artifacts/ROC_curveXGB.csv",
+                  },
+              ],
+          }
+
+          with file_io.FileIO("/mlpipeline-ui-metadata.json", "w") as f:
+              json.dump(metadata, f)
+
+          with file_io.FileIO(mlpipeline_ui_metadata, "w") as f:
+              json.dump(metadata, f)
+
+          metrics = {
+              "metrics": [
+                  {
+                      "name": "accuracy-score",  # The name of the metric. Visualized as the column name in the runs table.
+                      "numberValue": xgb_score,  # The value of the metric. Must be a numeric value.
+                      "format": "RAW",  # The optional format of the metric. Supported values are "RAW" (displayed in raw format) and "PERCENTAGE" (displayed in percentage format).
+                  },
+                  {
+                      "name": "precision-score",  # The name of the metric. Visualized as the column name in the runs table.
+                      "numberValue": xgb_precision,  # The value of the metric. Must be a numeric value.
+                      "format": "RAW",  # The optional format of the metric. Supported values are "RAW" (displayed in raw format) and "PERCENTAGE" (displayed in percentage format).
+                  },
+                  {
+                      "name": "recall",  # The name of the metric. Visualized as the column name in the runs table.
+                      "numberValue": xgb_recall,  # The value of the metric. Must be a numeric value.
+                      "format": "RAW",  # The optional format of the metric. Supported values are "RAW" (displayed in raw format) and "PERCENTAGE" (displayed in percentage format).
+                  },
+                  {
+                      "name": "f1-score",  # The name of the metric. Visualized as the column name in the runs table.
+                      "numberValue": xgb_f1,  # The value of the metric. Must be a numeric value.
+                      "format": "RAW",  # The optional format of the metric. Supported values are "RAW" (displayed in raw format) and "PERCENTAGE" (displayed in percentage format).
+                  },
+                  {
+                      "name": "auc-score",  # The name of the metric. Visualized as the column name in the runs table.
+                      "numberValue": auc_score,  # The value of the metric. Must be a numeric value.
+                      "format": "RAW",  # The optional format of the metric. Supported values are "RAW" (displayed in raw format) and "PERCENTAGE" (displayed in percentage format).
+                  },
+              ]
+          }
+
+          with file_io.FileIO("/mlpipeline-metrics.json", "w") as f:
+              json.dump(metrics, f)
+
+          with file_io.FileIO(mlpipeline_metrics, "w") as f:
+              json.dump(metrics, f)
+
+      import json
+      import argparse
+      _parser = argparse.ArgumentParser(prog='Xgb model', description='')
+      _parser.add_argument("--df-churn-ip", dest="df_churn_ip", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--n-estimators", dest="n_estimators", type=int, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--verbosity", dest="verbosity", type=int, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--max-depth", dest="max_depth", type=int, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--eta", dest="eta", type=int, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--silent", dest="silent", type=int, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--in-gcp-bucket-project", dest="in_gcp_bucket_project", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--in-gcp-sa-json", dest="in_gcp_sa_json", type=json.loads, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--in-gcp-bucket-output-path", dest="in_gcp_bucket_output_path", type=str, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--conf-matr", dest="conf_matr", type=_make_parent_dirs_and_return_path, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--mlpipeline-ui-metadata", dest="mlpipeline_ui_metadata", type=_make_parent_dirs_and_return_path, required=True, default=argparse.SUPPRESS)
+      _parser.add_argument("--mlpipeline-metrics", dest="mlpipeline_metrics", type=_make_parent_dirs_and_return_path, required=True, default=argparse.SUPPRESS)
+      _parsed_args = vars(_parser.parse_args())
+
+      _outputs = xgb_model(**_parsed_args)
+    args:
+    - --df-churn-ip
+    - {inputPath: df_churn_ip}
+    - --n-estimators
+    - {inputValue: n_estimators}
+    - --verbosity
+    - {inputValue: verbosity}
+    - --max-depth
+    - {inputValue: max_depth}
+    - --eta
+    - {inputValue: eta}
+    - --silent
+    - {inputValue: silent}
+    - --in-gcp-bucket-project
+    - {inputValue: in_gcp_bucket_project}
+    - --in-gcp-sa-json
+    - {inputValue: in_gcp_sa_json}
+    - --in-gcp-bucket-output-path
+    - {inputValue: in_gcp_bucket_output_path}
+    - --conf-matr
+    - {outputPath: conf_matr}
+    - --mlpipeline-ui-metadata
+    - {outputPath: mlpipeline_ui_metadata}
+    - --mlpipeline-metrics
+    - {outputPath: mlpipeline_metrics}
