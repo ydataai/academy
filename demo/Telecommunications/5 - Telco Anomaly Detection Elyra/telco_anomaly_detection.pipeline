@@ -9,16 +9,14 @@
       "id": "primary",
       "nodes": [
         {
-          "id": "86d6b52e-ff68-4531-98cd-f897d61c9ce4",
+          "id": "0e31619f-4fb1-4317-9dc7-013892faea2e",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "read_data.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-cpu",
-              "outputs": [
-                "data.csv"
-              ],
+              "filename": "anomaly/read_data.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
+              "outputs": [],
               "env_vars": [],
               "dependencies": [
                 "gcs_credentials.json"
@@ -29,8 +27,8 @@
             "ui_data": {
               "label": "read_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 55,
-              "y_pos": 167,
+              "x_pos": 31,
+              "y_pos": 58,
               "description": "Run notebook file"
             }
           },
@@ -64,16 +62,17 @@
           ]
         },
         {
-          "id": "c95ff7f2-23f9-48ed-93d5-b7bdc0957ebd",
+          "id": "92991a86-7fb0-44db-8933-f0b92f9d6833",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "profile_data.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-cpu",
+              "filename": "anomaly/profile_data.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
               "outputs": [],
               "env_vars": [],
               "dependencies": [
+                "gcs_credentials.json",
                 "pandas-profiling-master.zip"
               ],
               "include_subdirectories": false
@@ -82,8 +81,8 @@
             "ui_data": {
               "label": "profile_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 277,
-              "y_pos": 168,
+              "x_pos": 125,
+              "y_pos": 130,
               "description": "Run notebook file"
             }
           },
@@ -101,8 +100,8 @@
               },
               "links": [
                 {
-                  "id": "18a51506-e80a-4e6c-bd04-4304e83846c3",
-                  "node_id_ref": "86d6b52e-ff68-4531-98cd-f897d61c9ce4",
+                  "id": "6c731498-24c9-4649-8c41-1f356d0a57e9",
+                  "node_id_ref": "0e31619f-4fb1-4317-9dc7-013892faea2e",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -124,18 +123,137 @@
           ]
         },
         {
-          "id": "c06e0510-6068-4fa6-bc09-6cf0493feda4",
+          "id": "ede7ba46-6a78-41ab-aac8-39b628ecaea9",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "synthesize_data.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-gpu",
-              "outputs": [
-                "data_sampled.csv"
-              ],
+              "filename": "anomaly/check_data_quality.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
+              "outputs": [],
               "env_vars": [],
               "dependencies": [
+                "gcs_credentials.json"
+              ],
+              "include_subdirectories": false
+            },
+            "label": "",
+            "ui_data": {
+              "label": "check_data_quality.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 249,
+              "y_pos": 213,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "2f1f752e-3ab4-4186-bb3d-c9cb12cdfe72",
+                  "node_id_ref": "92991a86-7fb0-44db-8933-f0b92f9d6833",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "28c48f64-1795-40c4-adb9-9605c076243c",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "anomaly/preprocess_data.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
+              "outputs": [],
+              "env_vars": [],
+              "dependencies": [
+                "gcs_credentials.json"
+              ],
+              "include_subdirectories": false
+            },
+            "label": "",
+            "ui_data": {
+              "label": "preprocess_data.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 366,
+              "y_pos": 296,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "8a9c3fac-335d-4948-b625-ef2263fe9983",
+                  "node_id_ref": "ede7ba46-6a78-41ab-aac8-39b628ecaea9",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "d50ec52d-6d7f-43b1-a4d3-f355cebc158d",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "anomaly/synthesize_data.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
+              "outputs": [],
+              "env_vars": [],
+              "dependencies": [
+                "gcs_credentials.json",
                 "processed_data_trained_synth.pkl"
               ],
               "include_subdirectories": false
@@ -144,8 +262,8 @@
             "ui_data": {
               "label": "synthesize_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 976,
-              "y_pos": 167,
+              "x_pos": 514,
+              "y_pos": 366,
               "description": "Run notebook file"
             }
           },
@@ -163,8 +281,8 @@
               },
               "links": [
                 {
-                  "id": "9d02299c-902d-453e-b6cf-206681a4015a",
-                  "node_id_ref": "372eacc2-bc82-4d5b-a256-25fe55f31de9",
+                  "id": "b17a2988-35e2-4119-99d3-bf4a23c9ae02",
+                  "node_id_ref": "28c48f64-1795-40c4-adb9-9605c076243c",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -186,202 +304,26 @@
           ]
         },
         {
-          "id": "7635502a-ceb3-40ff-86a9-9bb3809405e2",
+          "id": "e8657266-17e5-4e09-9097-d49fc3040ba8",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "train_and_detect.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-cpu",
+              "filename": "anomaly/concatenate_dataset.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
               "outputs": [],
               "env_vars": [],
-              "dependencies": [],
-              "include_subdirectories": false
-            },
-            "label": "",
-            "ui_data": {
-              "label": "train_and_detect.ipynb",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 280,
-              "y_pos": 291,
-              "description": "Run notebook file"
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "id": "4f291440-a362-4559-92b9-a13ff49eff63",
-                  "node_id_ref": "4f41ed87-16f6-44b7-bee7-863d61da0474",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "27dfb42b-12e5-4c4f-be0a-c8d92ec884b2",
-          "type": "execution_node",
-          "op": "execute-notebook-node",
-          "app_data": {
-            "component_parameters": {
-              "filename": "check_data_quality.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-cpu",
-              "outputs": [],
-              "env_vars": [],
-              "dependencies": [],
-              "include_subdirectories": false
-            },
-            "label": "",
-            "ui_data": {
-              "label": "check_data_quality.ipynb",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 509,
-              "y_pos": 168,
-              "description": "Run notebook file"
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "id": "5e9e89c4-0b52-4742-a66e-aac63ed1ab87",
-                  "node_id_ref": "c95ff7f2-23f9-48ed-93d5-b7bdc0957ebd",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "372eacc2-bc82-4d5b-a256-25fe55f31de9",
-          "type": "execution_node",
-          "op": "execute-notebook-node",
-          "app_data": {
-            "component_parameters": {
-              "filename": "preprocess_data.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-cpu",
-              "outputs": [
-                "data_processed.csv"
+              "dependencies": [
+                "gcs_credentials.json"
               ],
-              "env_vars": [],
-              "dependencies": [],
-              "include_subdirectories": false
-            },
-            "label": "",
-            "ui_data": {
-              "label": "preprocess_data.ipynb",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 743,
-              "y_pos": 168,
-              "description": "Run notebook file"
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "id": "fd25816d-c4ac-4144-9141-1ffb2a9f5c9f",
-                  "node_id_ref": "27dfb42b-12e5-4c4f-be0a-c8d92ec884b2",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "4f41ed87-16f6-44b7-bee7-863d61da0474",
-          "type": "execution_node",
-          "op": "execute-notebook-node",
-          "app_data": {
-            "component_parameters": {
-              "filename": "concatenate_dataset.ipynb",
-              "runtime_image": "ghcr.io/ydataai/pipelines_ydata:0.28.27-cpu",
-              "outputs": [
-                "data_augmented.csv"
-              ],
-              "env_vars": [],
-              "dependencies": [],
               "include_subdirectories": false
             },
             "label": "",
             "ui_data": {
               "label": "concatenate_dataset.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 65,
-              "y_pos": 290,
+              "x_pos": 668,
+              "y_pos": 435,
               "description": "Run notebook file"
             }
           },
@@ -399,8 +341,68 @@
               },
               "links": [
                 {
-                  "id": "7498c322-0d55-408a-8cdf-f80511646b6f",
-                  "node_id_ref": "c06e0510-6068-4fa6-bc09-6cf0493feda4",
+                  "id": "5e3c77c7-15ba-41db-9951-85b623ccd0c5",
+                  "node_id_ref": "d50ec52d-6d7f-43b1-a4d3-f355cebc158d",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1f42ac53-3a7b-4af4-a692-32d000b9e481",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "anomaly/train_and_detect.ipynb",
+              "runtime_image": "ydata220207113243.azurecr.io/pipelines_ydata:0.32.16-cpu",
+              "outputs": [],
+              "env_vars": [],
+              "dependencies": [
+                "gcs_credentials.json"
+              ],
+              "include_subdirectories": false
+            },
+            "label": "",
+            "ui_data": {
+              "label": "train_and_detect.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 810,
+              "y_pos": 497,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "beab6595-505d-4735-a23a-c313870c5685",
+                  "node_id_ref": "e8657266-17e5-4e09-9097-d49fc3040ba8",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -426,9 +428,9 @@
         "ui_data": {
           "comments": []
         },
-        "version": 5,
+        "version": 7,
         "properties": {
-          "name": "telco_anomaly_detection",
+          "name": "untitled",
           "runtime": "Generic"
         }
       },
