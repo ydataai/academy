@@ -1,8 +1,6 @@
 # YData Academy
-## Code repository
 
-In here you'll find technical documentation, tutorials and code samples from our blogs posts.
-
+In here you'll find examples, code samples, tutorials and integrations with other platforms.
 
 Visit us at https://YData.ai
 
