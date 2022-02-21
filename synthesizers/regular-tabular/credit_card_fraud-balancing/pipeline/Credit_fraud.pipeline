@@ -139,10 +139,11 @@
               "filename": "sample_synth.ipynb",
               "runtime_image": "ydata220217095712.azurecr.io/pipelines_ydata:0.32.42-cpu",
               "outputs": [
-                "outputs/synth_sample_500.csv"
+                "outputs/firstsynth_sample.csv"
               ],
               "env_vars": [
-                "NSAMPLES=500"
+                "NSAMPLES=500",
+                "OUTPUT_PATH=outputs/firstsynth_sample.csv"
               ],
               "dependencies": [],
               "include_subdirectories": false,
@@ -201,10 +202,11 @@
               "filename": "sample_synth.ipynb",
               "runtime_image": "ydata220217095712.azurecr.io/pipelines_ydata:0.32.42-cpu",
               "outputs": [
-                "outputs/synth_sample_200.csv"
+                "outputs/secondsynth_sample.csv"
               ],
               "env_vars": [
-                "NSAMPLES=200"
+                "NSAMPLES=200",
+                "OUTPUT_PATH=outputs/secondsynth_sample.csv"
               ],
               "dependencies": [],
               "include_subdirectories": false,
@@ -323,11 +325,11 @@
               "filename": "concat-data.ipynb",
               "runtime_image": "ydata220217095712.azurecr.io/pipelines_ydata:0.32.42-cpu",
               "outputs": [
-                "outputs/combined_fraud500.csv"
+                "outputs/firstcombined_fraud.csv"
               ],
               "env_vars": [
-                "SYNTH_DATA_PATH='outputs/synth_sample_500.csv'",
-                "OUTPUT_PATH='outputs/combined_fraud500.csv'"
+                "SYNTH_DATA_PATH=outputs/firstsynth_sample.csv",
+                "OUTPUT_PATH=outputs/firstcombined_fraud.csv"
               ],
               "dependencies": [],
               "include_subdirectories": false,
@@ -392,11 +394,11 @@
               "filename": "concat-data.ipynb",
               "runtime_image": "ydata220217095712.azurecr.io/pipelines_ydata:0.32.42-cpu",
               "outputs": [
-                "outputs/combined_fraud500.csv"
+                "outputs/secondcombined_fraud.csv"
               ],
               "env_vars": [
-                "SYNTH_DATA_PATH='outputs/synth_sample_500.csv' OUTPUT_PATH='outputs/combined_fraud200.csv'",
-                "OUTPUT_PATH='outputs/combined_fraud200.csv'"
+                "SYNTH_DATA_PATH=outputs/secondsynth_sample.csv",
+                "OUTPUT_PATH=outputs/secondcombined_fraud.csv"
               ],
               "dependencies": [],
               "include_subdirectories": false,
@@ -457,7 +459,7 @@
               "runtime_image": "ydata220217095712.azurecr.io/pipelines_ydata:0.32.42-cpu",
               "outputs": [],
               "env_vars": [
-                "DATA_PATH=outputs/combined_fraud500.csv"
+                "DATA_PATH=outputs/firstsynth_sample.csv"
               ],
               "dependencies": [],
               "include_subdirectories": false,
@@ -518,7 +520,7 @@
               "runtime_image": "ydata220217095712.azurecr.io/pipelines_ydata:0.32.42-cpu",
               "outputs": [],
               "env_vars": [
-                "DATA_PATH=outputs/combined_fraud200.csv"
+                "DATA_PATH=outputs/secondcombined_fraud.csv"
               ],
               "dependencies": [],
               "include_subdirectories": false,

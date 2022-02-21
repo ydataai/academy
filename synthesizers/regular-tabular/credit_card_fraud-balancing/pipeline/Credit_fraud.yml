@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   generateName: lambda-
-  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.11, pipelines.kubeflow.org/pipeline_compilation_time: '2022-02-21T09:43:05.796466',
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.11, pipelines.kubeflow.org/pipeline_compilation_time: '2022-02-21T10:21:47.198811',
     pipelines.kubeflow.org/pipeline_spec: '{"name": "<lambda>"}'}
   labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.11}
 spec:
@@ -16,7 +16,7 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "classifier-034a0b59-6caf-45e5-a0c2-9dc19ac2ca3b.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "classifier-034a0b59-6caf-45e5-a0c2-9dc19ac2ca3b.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/classifier.ipynb"
           --inputs "outputs/data.csv;outputs/non_fraud.csv;outputs/fraud.csv" ']
       command: [sh, -c]
@@ -56,9 +56,9 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "classifier-ebea8846-b465-4b5a-a554-0b3e4d64aaaf.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "classifier-ebea8846-b465-4b5a-a554-0b3e4d64aaaf.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/classifier.ipynb"
-          --inputs "outputs/synth_model.pkl;outputs/non_fraud.csv;outputs/fraud.csv;outputs/combined_fraud500.csv;outputs/data.csv;outputs/synth_sample_500.csv" ']
+          --inputs "outputs/combined_fraud500.csv;outputs/non_fraud.csv;outputs/fraud.csv;outputs/firstsynth_sample.csv;outputs/data.csv;outputs/synth_model.pkl" ']
       command: [sh, -c]
       env:
       - {name: DATA_PATH, value: outputs/combined_fraud500.csv}
@@ -96,9 +96,9 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "classifier-792da286-45b0-46c8-9e22-1ce4b31e271c.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "classifier-792da286-45b0-46c8-9e22-1ce4b31e271c.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/classifier.ipynb"
-          --inputs "outputs/combined_fraud500.csv;outputs/non_fraud.csv;outputs/fraud.csv;outputs/synth_sample_200.csv;outputs/data.csv;outputs/synth_model.pkl" ']
+          --inputs "outputs/combined_fraud500.csv;outputs/non_fraud.csv;outputs/fraud.csv;outputs/secondsynth_sample.csv;outputs/data.csv;outputs/synth_model.pkl" ']
       command: [sh, -c]
       env:
       - {name: DATA_PATH, value: outputs/combined_fraud200.csv}
@@ -136,9 +136,9 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "concat-data-d996ebaa-1eb9-4aab-bfd7-4642e8abecbf.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "concat-data-d996ebaa-1eb9-4aab-bfd7-4642e8abecbf.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/concat-data.ipynb"
-          --inputs "outputs/synth_model.pkl;outputs/non_fraud.csv;outputs/fraud.csv;outputs/data.csv;outputs/synth_sample_500.csv"
+          --inputs "outputs/non_fraud.csv;outputs/fraud.csv;outputs/firstsynth_sample.csv;outputs/data.csv;outputs/synth_model.pkl"
           --outputs "outputs/combined_fraud500.csv" ']
       command: [sh, -c]
       env:
@@ -178,9 +178,9 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "concat-data-48c4d609-4bd0-41bf-a720-4cf857a77b2a.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "concat-data-48c4d609-4bd0-41bf-a720-4cf857a77b2a.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/concat-data.ipynb"
-          --inputs "outputs/non_fraud.csv;outputs/fraud.csv;outputs/synth_sample_200.csv;outputs/data.csv;outputs/synth_model.pkl"
+          --inputs "outputs/non_fraud.csv;outputs/fraud.csv;outputs/secondsynth_sample.csv;outputs/data.csv;outputs/synth_model.pkl"
           --outputs "outputs/combined_fraud500.csv" ']
       command: [sh, -c]
       env:
@@ -220,7 +220,7 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "train-synth-34ff7eb0-8785-46e3-b3d0-8b90d137758f.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "train-synth-34ff7eb0-8785-46e3-b3d0-8b90d137758f.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/train-synth.ipynb"
           --inputs "outputs/data.csv;outputs/non_fraud.csv;outputs/fraud.csv" --outputs
           "outputs/synth_model.pkl" ']
@@ -288,7 +288,7 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "read-data-a918a628-ae3b-4ef1-ae35-59926d7429d8.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "read-data-a918a628-ae3b-4ef1-ae35-59926d7429d8.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/read-data.ipynb"
           --outputs "outputs/fraud.csv;outputs/non_fraud.csv;outputs/data.csv" ']
       command: [sh, -c]
@@ -328,13 +328,14 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "sample_synth-9d7068de-55d0-4b6a-9ee2-db42fab8ba11.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "sample_synth-9d7068de-55d0-4b6a-9ee2-db42fab8ba11.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/sample_synth.ipynb"
           --inputs "outputs/fraud.csv;outputs/synth_model.pkl;outputs/non_fraud.csv;outputs/data.csv"
-          --outputs "outputs/synth_sample_500.csv" ']
+          --outputs "outputs/firstsynth_sample.csv" ']
       command: [sh, -c]
       env:
       - {name: NSAMPLES, value: '500'}
+      - {name: OUTPUT_PATH, value: outputs/firstsynth_sample.csv}
       - {name: ELYRA_RUNTIME_ENV, value: kfp}
       - {name: AWS_ACCESS_KEY_ID, value: minio}
       - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
@@ -369,13 +370,14 @@ spec:
           --output requirements-elyra.txt && python3 -m pip install  packaging &&
           python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
           --cos-endpoint http://minio-service.kubeflow:9000 --cos-bucket elyra-0ca15a25-94c5-4745-bcf5-3efd2be72e24
-          --cos-directory "Credit_fraud-0221094303" --cos-dependencies-archive "sample_synth-05003c47-0a90-453b-a866-e9c46deac693.tar.gz"
+          --cos-directory "Credit_fraud-0221102145" --cos-dependencies-archive "sample_synth-05003c47-0a90-453b-a866-e9c46deac693.tar.gz"
           --file "academy/synthesizers/regular-tabular/credit_card_fraud-balancing/sample_synth.ipynb"
           --inputs "outputs/fraud.csv;outputs/synth_model.pkl;outputs/non_fraud.csv;outputs/data.csv"
-          --outputs "outputs/synth_sample_200.csv" ']
+          --outputs "outputs/secondsynth_sample.csv" ']
       command: [sh, -c]
       env:
       - {name: NSAMPLES, value: '200'}
+      - {name: OUTPUT_PATH, value: outputs/secondsynth_sample.csv}
       - {name: ELYRA_RUNTIME_ENV, value: kfp}
       - {name: AWS_ACCESS_KEY_ID, value: minio}
       - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
