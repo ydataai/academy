@@ -11,7 +11,7 @@ from ydata.dataset import Dataset
 def _viz_revol_util(ax, sample: pd.DataFrame):
     "Plots the product of total credit limit and revolving credit utilization to the revolving credit balance."
     expected_revol_bal = sample.revol_util * sample.total_rev_hi_lim
-    sns.scatterplot(x=expected_revol_bal, y=sample.revol_bal, s=150, ax=ax)
+    sns.scatterplot(x=expected_revol_bal, y=sample.revol_bal, s=150, ax=ax, color=ydata_colorlist()[0])
     ax.set(xscale="log", yscale="log")
     plt.setp(ax, xlabel = 'Predicted revolving balance, $')
     plt.setp(ax, ylabel = 'Expected revolving balance, $')
@@ -85,7 +85,7 @@ def ydata_colorlist(n: int = None):
     """Returns a colorlist with the YData colors.
     Pass n to define a truncated color map (use less colors)"""
     colors = [
-        #"#830000",  # Dark red 0
+        "#830000",  # Dark red 0
         "#474747",  # Subheadlines 1
         "#FF6464",  # Error 2
         "#040404",  # Dominant hue 3
