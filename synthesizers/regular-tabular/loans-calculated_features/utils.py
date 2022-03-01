@@ -7,18 +7,19 @@ import seaborn as sns
 import pandas as pd
 
 from ydata.dataset import Dataset
+from ydata.report.style_guide import YDATA_COLORS, YDATA_CMAP_COLORS
 
 def _viz_revol_util(ax, sample: pd.DataFrame):
     "Plots the product of total credit limit and revolving credit utilization to the revolving credit balance."
     expected_revol_bal = sample.revol_util * sample.total_rev_hi_lim
     sns.scatterplot(x=expected_revol_bal, y=sample.revol_bal, s=150, ax=ax, color=ydata_colorlist()[0])
     ax.set(xscale="log", yscale="log")
-    plt.setp(ax, xlabel = 'Predicted revolving balance, $')
-    plt.setp(ax, ylabel = 'Expected revolving balance, $')
+    ax.set_xlabel('Predicted revolving balance, $', fontsize=12)
+    ax.set_ylabel('Expected revolving balance, $', fontsize=12)
     lims = [min([ax.get_xlim(), ax.get_ylim()]), max([ax.get_xlim(), ax.get_ylim()])]
     ax.plot(lims, lims, 'k', alpha=0.75)
     ax.grid(False)
-    ax.title.set_text(f'Revolving balance')
+    ax.set_title(f'Revolving balance', fontsize=16)
 
 def _viz_total_pymnt(ax, sample: pd.DataFrame):
     "Compares the summation of the different pay components to the total payments."
@@ -27,11 +28,11 @@ def _viz_total_pymnt(ax, sample: pd.DataFrame):
                             'Principal': [sample.total_rec_prncp.mean(), 0],
                             'Total Payment': [0, sample.total_pymnt.mean()]},
                             index=['Components', 'Total Payment'])
-    set_custom_theme([4, 9, 1, 0])
+    set_custom_theme([7, 3, 2, 0])
     payments.plot(kind='bar', stacked=True, edgecolor='k', linewidth=1.5, width=1.0, ax=ax)
     ax.grid(False)
-    plt.setp(ax, ylabel='Amount, $')
-    ax.title.set_text(f'Breakdown of payment components in the dataset (average)')
+    ax.set_ylabel('Amount, $', fontsize=12)
+    ax.set_title(f'Breakdown of payment components in the dataset (average)', fontsize=16)
     sns.despine(ax=ax, top=True, right=True, left=True, bottom=True)
 
 def _viz_installment(ax, sample: pd.DataFrame):
@@ -48,11 +49,11 @@ def _viz_installment(ax, sample: pd.DataFrame):
     ax.set_xticklabels(xlabels)
     for patch in ax.patches:
         patch.set_width(0.95)
-    ax.axhline(expected_cumul, label='Total due payment', color=ydata_colorlist()[8])
-    ax.title.set_text('Randomly sampled loan schedule: {}$ loan, {:.1f}% interest {} month term'.format(loan_amnt, p_interest*12*100, term))
+    ax.axhline(expected_cumul, label='Total due payment', color=ydata_colorlist()[2])
+    ax.set_title('Randomly sampled loan schedule: {}$ loan, {:.1f}% interest {} month term'.format(loan_amnt, p_interest*12*100, term), fontsize=16)
     ax.legend(loc='upper center')
-    plt.setp(ax, ylabel='Cumulative payments, $')
-    plt.setp(ax, xlabel = 'Time, months')
+    ax.set_ylabel('Cumulative payments, $', fontsize=12)
+    ax.set_xlabel('Time, months', fontsize=12)
     sns.despine(ax=ax, top=True, right=True, left=True, bottom=True)
 
 def viz_main(sample: Union[Dataset, pd.DataFrame], sample_name: str = 'Real Data'):
@@ -63,7 +64,7 @@ def viz_main(sample: Union[Dataset, pd.DataFrame], sample_name: str = 'Real Data
     _viz_revol_util(axs[0], sample)
     _viz_total_pymnt(axs[1], sample)
     _viz_installment(axs[2], sample)
-    fig.suptitle(sample_name, fontweight='bold')
+    fig.suptitle(sample_name, fontweight='bold', fontsize=18)
     fig.tight_layout(pad=2)
     plt.show()
 
@@ -74,7 +75,7 @@ def viz_side_by_side(samples: Dict[str, Dataset]):
     axs = [[plt.subplot(gs[j, i]) for j in range(4)] for i in range(2)]
     for i, (sample_name, sample) in enumerate(samples.items()):
         axs[i][0].axis('off')
-        axs[i][0].set_title(sample_name, fontweight='bold')
+        axs[i][0].set_title(sample_name, fontweight='bold', fontsize=18)
         _viz_revol_util(axs[i][1], sample)
         _viz_total_pymnt(axs[i][2], sample)
         _viz_installment(axs[i][3], sample)
@@ -84,20 +85,7 @@ def viz_side_by_side(samples: Dict[str, Dataset]):
 def ydata_colorlist(n: int = None):
     """Returns a colorlist with the YData colors.
     Pass n to define a truncated color map (use less colors)"""
-    colors = [
-        "#830000",  # Dark red 0
-        "#474747",  # Subheadlines 1
-        "#FF6464",  # Error 2
-        "#040404",  # Dominant hue 3
-        "#FFFFFF",  # Primary color 4
-        "#5FED5C",  # Success 5
-        "#FFEA2D",  # Warning 6
-        "#1298E3",  # Visual aid 7
-        "#7A7A7A",  # Border dividers 8
-        "#B8B8B8",  # Disabled states 9
-        "#F5F5F5",  # Backgrounds, text on dark background 10
-        "#E32212",  # Accent color 11
-    ]
+    colors = YDATA_COLORS + YDATA_CMAP_COLORS
     if n and n>len(colors):
         n=len(colors)
     return colors[:n]
