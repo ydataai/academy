@@ -1,7 +1,7 @@
 from ydata.dataset import Dataset
 
 
-def preprocess_data(data: Dataset):
+def setting_index_data(data: Dataset):
     return (data
         .to_pandas()
         .astype({'timestamp': 'datetime64[ns]'})
