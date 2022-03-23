@@ -180,21 +180,22 @@ def plot_metric_byperiod(original: DataFrame, reconstructed: DataFrame, feature:
     ax1.set_title(f'{metric.capitalize()} {feature} per season', fontsize=subtitle_font)
     ax1.set_ylabel(feature.capitalize(), fontsize=labelsize, weight='bold')
     ax1.set_xlabel('Season', fontsize=labelsize, weight='bold')
-    pl.plot(results_first_data['season'][metric], color=color_real, linewidth=2, label='Original')
-    pl.plot(results_second_data['season'][metric], color=color_synth, linewidth=3, label='Reconstructed')
+    pl.plot(results_first_data['season'][metric], color=color_real, linewidth=2)
+    pl.plot(results_second_data['season'][metric], color=color_synth, linewidth=3)
     pl.xticks(range(1, 5))
 
     ax2 = pl.subplot(gs[0, 1])  # row 0, col 1
-    pl.plot(results_first_data['month'][metric], color=color_real, linewidth=2, label='Original')
-    pl.plot(results_second_data['month'][metric], color=color_synth, linewidth=3, label='Reconstructed')
+    pl.plot(results_first_data['month'][metric], color=color_real, linewidth=2)
+    pl.plot(results_second_data['month'][metric], color=color_synth, linewidth=3)
     ax2.set_title(f'{metric.capitalize()} {feature} per month', fontsize=subtitle_font)
     ax2.set_xlabel('Month', fontsize=labelsize, weight='bold')
     ax2.set_ylabel(feature.capitalize(), fontsize=labelsize, weight='bold')
     pl.xticks(range(1, 13))
+    pl.legend()
 
     ax3 = pl.subplot(gs[1, :])  # row 1, span all columns
-    pl.plot(results_first_data['hour'][metric], color=color_real, linewidth=2, label='Original')
-    pl.plot(results_second_data['hour'][metric], color=color_synth, linewidth=3, label='Reconstructed')
+    pl.plot(results_first_data['hour'][metric], color=color_real, linewidth=2)
+    pl.plot(results_second_data['hour'][metric], color=color_synth, linewidth=3)
     ax3.set_xlabel('Hour', fontsize=labelsize, weight='bold')
     ax3.set_ylabel(feature.capitalize(), fontsize=labelsize, weight='bold')
     ax3.set_title(f'{metric.capitalize()} {feature} per hour', fontsize=subtitle_font)
@@ -229,7 +230,6 @@ def polar_graph(original: DataFrame, reconstructed: DataFrame, title='Polar Grap
     colors = ['#FF7276', '#CB4154', '#b7091d', '#a5081a', '#920717', '#800614', '#6e0511', '#6e0511']
 
     fig, ax = subplots(1,2, subplot_kw={'projection': 'polar'}, figsize=NOTEBOOK_FIG_SIZE)
-    thetagrids(range(0, 360, 45), ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))
     for i, data in enumerate([real, generated]):
         data.speed = cut(data.speed, bins=windspeed_bins, labels=windspeed_labels)
         data.direction = cut(data.direction, bins=winddirection_bins, labels=['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'])
@@ -245,6 +245,8 @@ def polar_graph(original: DataFrame, reconstructed: DataFrame, title='Polar Grap
 
         ax[i].set_theta_zero_location("N")
         ax[i].set_theta_direction(-1)
+        ax[i].set_thetagrids(range(0, 360, 45), ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'))
+
 
     legend(loc='lower center', bbox_to_anchor=(0.8, 1.05), ncol=3, fancybox=True, shadow=True, title = 'Windspeed Groups in km/h')
 
