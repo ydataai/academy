@@ -27,7 +27,7 @@ def resample(df: DataFrame, ts_col: str, ts_freq: str, partition_by: Optional[st
         if partition_by is not None:
             df = ( df
                 .copy().sort_values(by=[partition_by, ts_col])
-                
+
                 .reset_index().set_index([partition_by, ts_col])
                 .groupby( [ Grouper(level=partition_by), Grouper(level=ts_col, freq=ts_freq)])
                 .mean()
@@ -44,7 +44,7 @@ def resample(df: DataFrame, ts_col: str, ts_freq: str, partition_by: Optional[st
 
 def resample_station_data(df: DataFrame, partition_by: str = 'station', start_ts='2020-09-01', end_ts='2021-09-01', ts_freq='H'):
     """Resamples the data for each device with missing and observed values.
-    
+
     Steps:
         1. For each device, creates a full sequence between start_ts and end_ts by a given frequency ts_freq
         2. Resamples the original data for the same frequency
@@ -57,7 +57,7 @@ def resample_station_data(df: DataFrame, partition_by: str = 'station', start_ts
         index = date_range(start=start_ts, end=end_ts, freq=freq)
         index.name = 'timestamp'
         return index
-    
+
     index = create_timeseries_index(start_ts=start_ts, end_ts=end_ts)
 
     # Create a DataFrame of all partitions with the full index
@@ -67,8 +67,8 @@ def resample_station_data(df: DataFrame, partition_by: str = 'station', start_ts
         full['station'] = partition
         all_data.append(full)
     data = concat(all_data).reset_index().set_index(['timestamp', 'station'])
-    
-    # Resample the original values 
+
+    # Resample the original values
     resampled = resample(df, partition_by=partition_by, ts_col='timestamp', ts_freq=ts_freq).reset_index().set_index(['timestamp','station'])
     data = data.join(resampled).reset_index().set_index('timestamp')
     return data
@@ -98,7 +98,7 @@ def resample(df: DataFrame, ts_col: str, ts_freq: str, partition_by: Optional[st
         if partition_by is not None:
             df = ( df
                 .copy().sort_values(by=[partition_by, ts_col])
-                
+
                 .reset_index().set_index([partition_by, ts_col])
                 .groupby( [ Grouper(level=partition_by), Grouper(level=ts_col, freq=ts_freq)])
                 .mean()
@@ -115,7 +115,7 @@ def resample(df: DataFrame, ts_col: str, ts_freq: str, partition_by: Optional[st
 
 def resample_station_data(df: DataFrame, partition_by: str = 'station', start_ts='2020-09-01', end_ts='2021-09-01', ts_freq='H'):
     """Resamples the data for each device with missing and observed values.
-    
+
     Steps:
         1. For each device, creates a full sequence between start_ts and end_ts by a given frequency ts_freq
         2. Resamples the original data for the same frequency
@@ -128,7 +128,7 @@ def resample_station_data(df: DataFrame, partition_by: str = 'station', start_ts
         index = date_range(start=start_ts, end=end_ts, freq=freq)
         index.name = 'timestamp'
         return index
-    
+
     index = create_timeseries_index(start_ts=start_ts, end_ts=end_ts)
 
     # Create a DataFrame of all partitions with the full index
@@ -138,8 +138,8 @@ def resample_station_data(df: DataFrame, partition_by: str = 'station', start_ts
         full['station'] = partition
         all_data.append(full)
     data = concat(all_data).reset_index().set_index(['timestamp', 'station'])
-    
-    # Resample the original values 
+
+    # Resample the original values
     resampled = resample(df, partition_by=partition_by, ts_col='timestamp', ts_freq=ts_freq).reset_index().set_index(['timestamp','station'])
     data = data.join(resampled).reset_index().set_index('timestamp')
     return data
@@ -156,14 +156,17 @@ def data_boundaries(data: DataFrame, replace_na=False):
 
 
 # Factors
-
 def load_factors(fpath):
     "Loads factors from a JSON into a NumericalFactors."
     def keys_as_ints(d: dict):
         "Cast dictionary keys as integers."
-        return {int(k): v for (k,v) in d.items()}
+        return {int(k): v for (k, v) in d.items()}
 
-    factors = read_json(fpath)                                   # 
+    if isinstance(fpath, str):
+      factors = read_json(fpath)
+    else:
+      factors = fpath
+
     factors = {k: keys_as_ints(v) for (k,v) in factors.items()}  # cast keys of month to integers
     nf = NumericalFactors(groupby='month', factors=factors)
     return nf

@@ -13,7 +13,7 @@ NOTEBOOK_FIG_SIZE = (24,7)
 
 
 import warnings
-warnings.filterwarnings("ignore", category=UserWarning) 
+warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def plot_timeseries(data: DataFrame, feature: str = 'speed', title:str='', save_path=None, plt_show:bool = False):
@@ -27,13 +27,17 @@ def plot_timeseries(data: DataFrame, feature: str = 'speed', title:str='', save_
     show()
 
 def compare_acf(original: DataFrame, reconstructed: DataFrame, feature:str='speed',
-            n_lags:int=24, title:str = ''):
+            n_lags: int=24, title:str = ''):
     """Given two pandas dataframes the autocorrelation function is plotted."""
     real_ts, synth_ts = original[feature].dropna(), reconstructed[feature].dropna()
     n_lags = min(len(real_ts)/2-1, n_lags)
     fig, axs = subplots(1, 2, sharex=True, figsize=NOTEBOOK_FIG_SIZE)
     plot_acf(real_ts, ax=axs[0], lags=n_lags, title='Original')
+    axs[0].set_xlabel('Lag Number')
+    axs[0].set_ylabel('Autocorrelation')
     plot_acf(synth_ts, ax=axs[1], lags=n_lags, title='Reconstructed')
+    axs[1].set_xlabel('Lag Number')
+    axs[1].set_ylabel('Autocorrelation')
     suptitle(title, fontsize=24, fontweight='bold')
     return axs
 
@@ -99,7 +103,7 @@ def plot_hist(original: DataFrame, reconstructed: DataFrame, feature:str='speed'
     suptitle(title, fontsize=24, fontweight='bold')
     show()
 
-def compare_lags(original: DataFrame, reconstructed: DataFrame, feature: str = 'speed',  
+def compare_lags(original: DataFrame, reconstructed: DataFrame, feature: str = 'speed',
             title:str='1st Hour and 1st Day Differences - Distribution Overlap'):
     """Given two Pandas dataframes with real data and synthetic samples both histograms are plotted."""
 
@@ -115,7 +119,7 @@ def compare_lags(original: DataFrame, reconstructed: DataFrame, feature: str = '
     synth_kwargs = {'label': 'Reconstructed', 'color': 'red'}
     real_kwargs = {'label': 'Original', 'color': 'grey'}
     kde_kwargs = {'legend': False, 'label': '_nolegend_'}
-    
+
 
     axs[0].hist(synth_ts_1lag, **hist_kwargs, **synth_kwargs)
     synth_ts_1lag.plot.kde(ax=axs[0], **kde_kwargs, color='red')
@@ -163,7 +167,7 @@ def plot_metric_byperiod(original: DataFrame, reconstructed: DataFrame, feature:
     title_font, subtitle_font, labelsize = 18, 15, 12
 
     original, reconstructed = add_hour_month_season(original.copy()), add_hour_month_season(reconstructed.copy())
-        
+
     results_first_data = calculate_metrics_byperiod(original, ['season', 'month', 'hour'], [metric], feature)
     results_second_data = calculate_metrics_byperiod(reconstructed, ['season', 'month', 'hour'], [metric], feature)
 
@@ -176,21 +180,21 @@ def plot_metric_byperiod(original: DataFrame, reconstructed: DataFrame, feature:
     ax1.set_title(f'{metric.capitalize()} {feature} per season', fontsize=subtitle_font)
     ax1.set_ylabel(feature.capitalize(), fontsize=labelsize, weight='bold')
     ax1.set_xlabel('Season', fontsize=labelsize, weight='bold')
-    pl.plot(results_first_data['season'][metric], color=color_real, linewidth=2)
-    pl.plot(results_second_data['season'][metric], color=color_synth, linewidth=3)
+    pl.plot(results_first_data['season'][metric], color=color_real, linewidth=2, label='Original')
+    pl.plot(results_second_data['season'][metric], color=color_synth, linewidth=3, label='Reconstructed')
     pl.xticks(range(1, 5))
 
     ax2 = pl.subplot(gs[0, 1])  # row 0, col 1
-    pl.plot(results_first_data['month'][metric], color=color_real, linewidth=2)
-    pl.plot(results_second_data['month'][metric], color=color_synth, linewidth=3)
+    pl.plot(results_first_data['month'][metric], color=color_real, linewidth=2, label='Original')
+    pl.plot(results_second_data['month'][metric], color=color_synth, linewidth=3, label='Reconstructed')
     ax2.set_title(f'{metric.capitalize()} {feature} per month', fontsize=subtitle_font)
     ax2.set_xlabel('Month', fontsize=labelsize, weight='bold')
     ax2.set_ylabel(feature.capitalize(), fontsize=labelsize, weight='bold')
     pl.xticks(range(1, 13))
 
     ax3 = pl.subplot(gs[1, :])  # row 1, span all columns
-    pl.plot(results_first_data['hour'][metric], color=color_real, linewidth=2)
-    pl.plot(results_second_data['hour'][metric], color=color_synth, linewidth=3)
+    pl.plot(results_first_data['hour'][metric], color=color_real, linewidth=2, label='Original')
+    pl.plot(results_second_data['hour'][metric], color=color_synth, linewidth=3, label='Reconstructed')
     ax3.set_xlabel('Hour', fontsize=labelsize, weight='bold')
     ax3.set_ylabel(feature.capitalize(), fontsize=labelsize, weight='bold')
     ax3.set_title(f'{metric.capitalize()} {feature} per hour', fontsize=subtitle_font)
