@@ -14,7 +14,7 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "read_data.ipynb",
+              "filename": "1_read_data.ipynb",
               "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
               "outputs": [
                 "data.csv"
@@ -27,10 +27,10 @@
             },
             "label": "",
             "ui_data": {
-              "label": "read_data.ipynb",
+              "label": "1_read_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 90,
-              "y_pos": -50.000003814697266,
+              "x_pos": 108,
+              "y_pos": -73.00000381469727,
               "description": "Run notebook file"
             }
           },
@@ -69,7 +69,7 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "profile_data.ipynb",
+              "filename": "2_profile_data.ipynb",
               "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
               "outputs": [],
               "env_vars": [],
@@ -80,10 +80,10 @@
             },
             "label": "",
             "ui_data": {
-              "label": "profile_data.ipynb",
+              "label": "2_profile_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 218,
-              "y_pos": 27,
+              "x_pos": 329,
+              "y_pos": -67,
               "description": "Run notebook file"
             }
           },
@@ -129,7 +129,7 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "check_data_quality.ipynb",
+              "filename": "3_check_data_quality.ipynb",
               "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
               "outputs": [],
               "env_vars": [],
@@ -138,10 +138,10 @@
             },
             "label": "",
             "ui_data": {
-              "label": "check_data_quality.ipynb",
+              "label": "3_check_data_quality.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 354,
-              "y_pos": 84,
+              "x_pos": 554,
+              "y_pos": -62,
               "description": "Run notebook file"
             }
           },
@@ -187,7 +187,7 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "preprocess_data.ipynb",
+              "filename": "4_preprocess_data.ipynb",
               "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
               "outputs": [
                 "data_processed.csv"
@@ -198,10 +198,10 @@
             },
             "label": "",
             "ui_data": {
-              "label": "preprocess_data.ipynb",
+              "label": "4_preprocess_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 441,
-              "y_pos": 136,
+              "x_pos": 800,
+              "y_pos": -67,
               "description": "Run notebook file"
             }
           },
@@ -242,28 +242,26 @@
           ]
         },
         {
-          "id": "95bbc9c4-ea17-459d-a79f-6e55a428bbcb",
+          "id": "d4aefc61-52f3-464a-8830-c92e50ba9ea0",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "synthesize_data.ipynb",
-              "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-gpu",
+              "filename": "5_train_and_detect.ipynb",
+              "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
               "outputs": [
-                "data_sampled.csv"
+                "test_set.csv"
               ],
               "env_vars": [],
-              "dependencies": [
-                "trained_model.pkl"
-              ],
+              "dependencies": [],
               "include_subdirectories": false
             },
             "label": "",
             "ui_data": {
-              "label": "synthesize_data.ipynb",
+              "label": "5_train_and_detect.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 541,
-              "y_pos": 203,
+              "x_pos": 100,
+              "y_pos": 128,
               "description": "Run notebook file"
             }
           },
@@ -281,7 +279,7 @@
               },
               "links": [
                 {
-                  "id": "95ae507e-71c4-4623-a2ad-742b0635ca4f",
+                  "id": "07748d32-39b2-4233-ac2e-8747274827ce",
                   "node_id_ref": "d1aba436-9f97-4cb8-b884-8b9568aed775",
                   "port_id_ref": "outPort"
                 }
@@ -304,15 +302,15 @@
           ]
         },
         {
-          "id": "c7042cc2-426d-408e-9a45-c8110ba678a8",
+          "id": "531d28a6-9f96-4de7-8db8-369bdd0be638",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "concatenate_dataset.ipynb",
-              "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
+              "filename": "6_synthesize_data.ipynb",
+              "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-gpu",
               "outputs": [
-                "data_augmented.csv"
+                "data_sampled.csv"
               ],
               "env_vars": [],
               "dependencies": [],
@@ -320,10 +318,10 @@
             },
             "label": "",
             "ui_data": {
-              "label": "concatenate_dataset.ipynb",
+              "label": "6_synthesize_data.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 656,
-              "y_pos": 266,
+              "x_pos": 388,
+              "y_pos": 124,
               "description": "Run notebook file"
             }
           },
@@ -341,8 +339,8 @@
               },
               "links": [
                 {
-                  "id": "f43ac63c-e434-42f5-a494-aba9e205443c",
-                  "node_id_ref": "95bbc9c4-ea17-459d-a79f-6e55a428bbcb",
+                  "id": "b80197c6-d94b-4996-8c13-95ae45df77cf",
+                  "node_id_ref": "d4aefc61-52f3-464a-8830-c92e50ba9ea0",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -364,12 +362,12 @@
           ]
         },
         {
-          "id": "ce3a983f-4862-47d4-ba35-0333839692c2",
+          "id": "9ac07b21-06a2-48cd-b910-405312d2a522",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "train_and_detect.ipynb",
+              "filename": "7_train_and_detect_augmented.ipynb",
               "runtime_image": "ydata220217095509.azurecr.io/pipelines_ydata:0.32.51-cpu",
               "outputs": [],
               "env_vars": [],
@@ -378,10 +376,10 @@
             },
             "label": "",
             "ui_data": {
-              "label": "train_and_detect.ipynb",
+              "label": "7_train_and_detect_augmented.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 777,
-              "y_pos": 329,
+              "x_pos": 653,
+              "y_pos": 127,
               "description": "Run notebook file"
             }
           },
@@ -399,8 +397,8 @@
               },
               "links": [
                 {
-                  "id": "0b189e96-36db-4c07-84bc-32d7ce2b71ad",
-                  "node_id_ref": "c7042cc2-426d-408e-9a45-c8110ba678a8",
+                  "id": "865b9d9b-d487-452a-8582-3e498ffef8c2",
+                  "node_id_ref": "531d28a6-9f96-4de7-8db8-369bdd0be638",
                   "port_id_ref": "outPort"
                 }
               ]
