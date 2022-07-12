@@ -1,0 +1,558 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "5ea53cca-4291-40bc-89bc-762643dfc788",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "1_read_data.ipynb",
+              "outputs": [
+                "data.csv",
+                "metadata.pkl"
+              ],
+              "env_vars": [],
+              "dependencies": [
+                "hotel_booking.csv"
+              ],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
+            },
+            "label": "",
+            "ui_data": {
+              "label": "1_read_data.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 50,
+              "y_pos": 117.5,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "13b40b3b-2118-4241-8190-5041f0845db0",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "2_dataset_split.ipynb",
+              "outputs": [
+                "train.pkl",
+                "validation.pkl",
+                "holdout.pkl"
+              ],
+              "env_vars": [
+                "TRAIN_SIZE=0.8",
+                "TEST_SIZE=0.6"
+              ],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
+            },
+            "label": "",
+            "ui_data": {
+              "label": "2_dataset_split.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 290,
+              "y_pos": 117.5,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "94a99c28-8990-4a3a-8ac7-92303c28757e",
+                  "node_id_ref": "5ea53cca-4291-40bc-89bc-762643dfc788",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "435a5b4f-3eb2-4439-a0ca-e7c61d942878",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "4_data_profiling.ipynb",
+              "outputs": [
+                "train_profile.html"
+              ],
+              "env_vars": [
+                "SET_PATH=train.pkl",
+                "DATA_SPLIT=train"
+              ],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
+            },
+            "label": "training_data_profiling",
+            "ui_data": {
+              "label": "training_data_profiling",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 530,
+              "y_pos": 175,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "8d35206d-75fb-4772-ab90-d6b04ad4541a",
+                  "node_id_ref": "13b40b3b-2118-4241-8190-5041f0845db0",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "d1558b14-e8de-4714-92da-9d5b50e3a580",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "4_data_profiling.ipynb",
+              "outputs": [
+                "validation_profile.html"
+              ],
+              "env_vars": [
+                "SET_PATH=validation.pkl",
+                "DATA_SPLIT=validation"
+              ],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 6
+            },
+            "label": "validation_data_profiling",
+            "ui_data": {
+              "label": "validation_data_profiling",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 770,
+              "y_pos": 50,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "b20e53b6-9ce0-4781-a049-d28bc826d09b",
+                  "node_id_ref": "13b40b3b-2118-4241-8190-5041f0845db0",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "c203c6ff-843b-41e2-b4a9-9a2e44b050d8",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "3_traindata_preparation.ipynb",
+              "outputs": [
+                "imputers.pkl",
+                "dataprep_train.pkl",
+                "encoders.pkl",
+                "selected_vars.pkl",
+                "cols_split.pkl"
+              ],
+              "env_vars": [
+                "DATA_SPLIT=train",
+                "KEEP_DUP=first",
+                "STANDARD_NUM=True"
+              ],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
+            },
+            "label": "traindata_prep",
+            "ui_data": {
+              "label": "traindata_prep",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 770,
+              "y_pos": 175,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "7c8e9649-1e54-4dae-8571-cb361e52b25e",
+                  "node_id_ref": "435a5b4f-3eb2-4439-a0ca-e7c61d942878",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "5c1f9a12-49fd-4022-8971-c0ec4b60f1fb",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "5_data_preparation.ipynb",
+              "outputs": [
+                "dataprep_validation.pkl"
+              ],
+              "env_vars": [
+                "DATA_SPLIT=validation"
+              ],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu"
+            },
+            "label": "validation_dataprep",
+            "ui_data": {
+              "label": "validation_dataprep",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 1010,
+              "y_pos": 60,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "ccb01e56-db68-4717-a745-47ba96a6b028",
+                  "node_id_ref": "d1558b14-e8de-4714-92da-9d5b50e3a580",
+                  "port_id_ref": "outPort"
+                },
+                {
+                  "id": "0d575d88-6806-4bfd-92c6-44eafc7e0240",
+                  "node_id_ref": "c203c6ff-843b-41e2-b4a9-9a2e44b050d8",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "a9d0fc25-4c4a-4fb7-8c91-473da4a2bc18",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "4_data_profiling.ipynb",
+              "outputs": [],
+              "env_vars": [
+                "SET_PATH=dataprep_train.pkl",
+                "DATA_SPLIT=train"
+              ],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 6
+            },
+            "label": "Dataprep_profiling",
+            "ui_data": {
+              "label": "Dataprep_profiling",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 1009,
+              "y_pos": 253,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "e8de00d8-f8b5-4925-9730-a1942b8a085f",
+                  "node_id_ref": "c203c6ff-843b-41e2-b4a9-9a2e44b050d8",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f60169e3-6c11-4464-bf75-7289eec8d27f",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "6_model_training.ipynb",
+              "outputs": [
+                "model.pkl"
+              ],
+              "env_vars": [],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
+            },
+            "label": "",
+            "ui_data": {
+              "label": "6_model_training.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 1250,
+              "y_pos": 151.25,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "33e39af6-432a-4bad-b6a5-01aece22c388",
+                  "node_id_ref": "5c1f9a12-49fd-4022-8971-c0ec4b60f1fb",
+                  "port_id_ref": "outPort"
+                },
+                {
+                  "id": "5e20f2d4-c8f4-496b-8684-4984bdbd184a",
+                  "node_id_ref": "c203c6ff-843b-41e2-b4a9-9a2e44b050d8",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        },
+        "version": 7,
+        "properties": {
+          "name": "Hotel bookings - Preparation",
+          "runtime": "Generic"
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}
