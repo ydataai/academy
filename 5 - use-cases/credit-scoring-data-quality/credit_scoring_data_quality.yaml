@@ -1,0 +1,347 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: lambda-
+  annotations: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.13, pipelines.kubeflow.org/pipeline_compilation_time: '2022-10-20T22:32:50.036026',
+    pipelines.kubeflow.org/pipeline_spec: '{"name": "<lambda>"}'}
+  labels: {pipelines.kubeflow.org/kfp_sdk_version: 1.8.13}
+spec:
+  entrypoint: lambda
+  templates:
+  - name: balance-and-model-training
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "05_Balance_model-727814bf-499a-47fd-a267-912cf92e5614.tar.gz"
+          --file "05_Balance_model.ipynb" --inputs "train.csv;imputer.pkl;prep_parameters.pkl;metadata.pkl;test.csv;prep_traindata.csv"
+          --outputs "best_model.pkl;prep_parameters.pkl" ']
+      command: [sh, -c]
+      env:
+      - {name: AUGMENT, value: '1'}
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1.5'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 05_Balance_model.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline,
+        elyra/node-user-doc: Synthetic data generation to balance minority class}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: balance_and_model_training
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: drop-duplicates
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "04_drop_duplicates-f9c37f28-30b0-46d4-9833-3beaa183f175.tar.gz"
+          --file "04_drop_duplicates.ipynb" --inputs "train.csv;imputer.pkl;prep_parameters.pkl;metadata.pkl;test.csv;prep_traindata.csv"
+          --outputs "prep_traindata.csv;prep_parameters.pkl" ']
+      command: [sh, -c]
+      env:
+      - {name: DROP, value: '0'}
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 04_drop_duplicates.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: drop_duplicates
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: holdout-data-profiling
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "02_Data_profiling-03317305-90fa-42e9-8523-e85c71999cb2.tar.gz"
+          --file "02_Data_profiling.ipynb" --inputs "metadata.pkl;train.csv;test.csv" ']
+      command: [sh, -c]
+      env:
+      - {name: DATASET_PATH, value: test.csv}
+      - {name: LABEL_NAME, value: SeriousDlqin2yrs}
+      - {name: DATA_SPLIT, value: Test}
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 02_Data_profiling.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: holdout_data_profiling
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: holdout-inference
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "06_Model_holdout-1d4a43d4-13d3-4983-8292-4ee6116e374e.tar.gz"
+          --file "06_Model_holdout.ipynb" --inputs "train.csv;imputer.pkl;prep_parameters.pkl;best_model.pkl;metadata.pkl;test.csv;prep_traindata.csv" ']
+      command: [sh, -c]
+      env:
+      - {name: TEST_SPLIT, value: test.csv}
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1.5'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 06_Model_holdout.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: holdout_inference
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: lambda
+    dag:
+      tasks:
+      - name: balance-and-model-training
+        template: balance-and-model-training
+        dependencies: [drop-duplicates]
+      - name: drop-duplicates
+        template: drop-duplicates
+        dependencies: [profile-and-impute-missing]
+      - name: holdout-data-profiling
+        template: holdout-data-profiling
+        dependencies: [read-dataset]
+      - name: holdout-inference
+        template: holdout-inference
+        dependencies: [balance-and-model-training, holdout-data-profiling]
+      - name: profile-and-impute-missing
+        template: profile-and-impute-missing
+        dependencies: [train-data-profiling]
+      - {name: read-dataset, template: read-dataset}
+      - name: train-data-profiling
+        template: train-data-profiling
+        dependencies: [read-dataset]
+  - name: profile-and-impute-missing
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "03_Profiling_impute_missing-146154d8-6483-47b4-ba02-0a5c52534b4a.tar.gz"
+          --file "03_Profiling_impute_missing.ipynb" --inputs "metadata.pkl;train.csv;test.csv"
+          --outputs "prep_traindata.csv;imputer.pkl;prep_parameters.pkl" ']
+      command: [sh, -c]
+      env:
+      - {name: LABEL, value: SeriousDlqin2yrs}
+      - {name: IMPUTATION_STRATEGY, value: '1'}
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1.5'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 03_Profiling_impute_missing.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline,
+        elyra/node-user-doc: Profiling the training data split.}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: profile_and_impute_missing
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: read-dataset
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "01_Read_dataset-eb4c27cb-6941-4887-b2ea-a6251a4c2217.tar.gz"
+          --file "01_Read_dataset.ipynb" --outputs "metadata.pkl;train.csv;test.csv" ']
+      command: [sh, -c]
+      env:
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 01_Read_dataset.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline,
+        elyra/node-user-doc: Reading the dataset to be processed and data quality
+          improved.}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: read_dataset
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  - name: train-data-profiling
+    container:
+      args: ['mkdir -p ./jupyter-work-dir/ && cd ./jupyter-work-dir/ && echo ''Downloading
+          https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/elyra/kfp/bootstrapper.py
+          --output bootstrapper.py && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra.txt
+          --output requirements-elyra.txt && echo ''Downloading https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt''
+          && curl --fail -H "Cache-Control: no-cache" -L https://raw.githubusercontent.com/elyra-ai/elyra/v3.10.1/etc/generic/requirements-elyra-py37.txt
+          --output requirements-elyra-py37.txt && python3 -m pip install  packaging
+          && python3 -m pip freeze > requirements-current.txt && python3 bootstrapper.py
+          --pipeline-name "credit_scoring_data_quality" --cos-endpoint http://minio-service.kubeflow:9000
+          --cos-bucket elyra-73c9e7e7-879d-4683-8ac1-3c3472f45010 --cos-directory
+          "credit_scoring_data_quality-1020223238" --cos-dependencies-archive "02_Data_profiling-c7de2d82-42e2-4faa-bb51-667048b34236.tar.gz"
+          --file "02_Data_profiling.ipynb" --inputs "metadata.pkl;train.csv;test.csv" ']
+      command: [sh, -c]
+      env:
+      - {name: DATASET_PATH, value: train.csv}
+      - {name: LABEL_NAME, value: SeriousDlqin2yrs}
+      - {name: DATA_SPLIT, value: train}
+      - {name: ELYRA_RUNTIME_ENV, value: kfp}
+      - {name: AWS_ACCESS_KEY_ID, value: minio}
+      - {name: AWS_SECRET_ACCESS_KEY, value: minio123}
+      - name: ELYRA_ENABLE_PIPELINE_INFO
+        value: "True"
+      - {name: ELYRA_WRITABLE_CONTAINER_DIR, value: /tmp}
+      - {name: ELYRA_RUN_NAME, value: '{{workflow.uid}}'}
+      image: ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu
+      resources:
+        requests: {cpu: '1'}
+    outputs:
+      artifacts:
+      - {name: mlpipeline-metrics, path: /tmp/mlpipeline-metrics.json}
+      - {name: mlpipeline-ui-metadata, path: /tmp/mlpipeline-ui-metadata.json}
+    metadata:
+      annotations: {elyra/node-file-name: 02_Data_profiling.ipynb, elyra/pipeline-source: credit_scoring_data_quality.pipeline}
+      labels:
+        elyra/node-type: notebook-script
+        elyra/pipeline-name: credit_scoring_data_quality
+        elyra/pipeline-version: ''
+        elyra/experiment-name: ''
+        elyra/node-name: train_data_profiling
+        pipelines.kubeflow.org/kfp_sdk_version: 1.8.13
+        pipelines.kubeflow.org/pipeline-sdk-type: kfp
+        pipelines.kubeflow.org/enable_caching: "true"
+  arguments:
+    parameters: []
+  serviceAccountName: pipeline-runner
