@@ -1,0 +1,530 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "eb4c27cb-6941-4887-b2ea-a6251a4c2217",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "01_Read_dataset.ipynb",
+              "outputs": [
+                "metadata.pkl",
+                "train.csv",
+                "test.csv"
+              ],
+              "env_vars": [],
+              "kubernetes_secrets": [],
+              "dependencies": [
+                "cs-training.csv"
+              ],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
+              "cpu": 1
+            },
+            "label": "read_dataset",
+            "ui_data": {
+              "label": "read_dataset",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 170,
+              "y_pos": 50,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "c7de2d82-42e2-4faa-bb51-667048b34236",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "02_Data_profiling.ipynb",
+              "outputs": [],
+              "env_vars": [
+                "DATASET_PATH=train.csv",
+                "LABEL_NAME=SeriousDlqin2yrs",
+                "DATA_SPLIT=train"
+              ],
+              "kubernetes_secrets": [],
+              "dependencies": [
+                "cs-training.csv"
+              ],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
+              "cpu": 1
+            },
+            "label": "train_data_profiling",
+            "ui_data": {
+              "label": "train_data_profiling",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 290,
+              "y_pos": 165,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "2994d12d-f5ef-4a6d-9e55-2a9dee9e8493",
+                  "node_id_ref": "eb4c27cb-6941-4887-b2ea-a6251a4c2217",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "03317305-90fa-42e9-8523-e85c71999cb2",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "02_Data_profiling.ipynb",
+              "outputs": [],
+              "env_vars": [
+                "DATASET_PATH=test.csv",
+                "LABEL_NAME=SeriousDlqin2yrs",
+                "DATA_SPLIT=Test"
+              ],
+              "kubernetes_secrets": [],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
+              "cpu": 1
+            },
+            "label": "holdout_data_profiling",
+            "ui_data": {
+              "label": "holdout_data_profiling",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 50,
+              "y_pos": 510,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "84bda49c-9b55-4c3e-961d-d4fc86f5223c",
+                  "node_id_ref": "eb4c27cb-6941-4887-b2ea-a6251a4c2217",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "146154d8-6483-47b4-ba02-0a5c52534b4a",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "03_Profiling_impute_missing.ipynb",
+              "outputs": [
+                "prep_traindata.csv",
+                "imputer.pkl",
+                "prep_parameters.pkl"
+              ],
+              "env_vars": [
+                "LABEL=SeriousDlqin2yrs",
+                "IMPUTATION_STRATEGY=1"
+              ],
+              "kubernetes_secrets": [],
+              "dependencies": [
+                "cs-training.csv"
+              ],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
+              "cpu": 1.5
+            },
+            "label": "profile_and_impute_missing",
+            "ui_data": {
+              "label": "profile_and_impute_missing",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 290,
+              "y_pos": 280,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "52f070fb-e1e7-4c35-a0d0-4bd7b7693775",
+                  "node_id_ref": "c7de2d82-42e2-4faa-bb51-667048b34236",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f9c37f28-30b0-46d4-9833-3beaa183f175",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "04_drop_duplicates.ipynb",
+              "outputs": [
+                "prep_traindata.csv",
+                "prep_parameters.pkl"
+              ],
+              "env_vars": [
+                "DROP=0"
+              ],
+              "kubernetes_secrets": [],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "cpu": 1,
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu"
+            },
+            "label": "drop_duplicates",
+            "ui_data": {
+              "label": "drop_duplicates",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 290,
+              "y_pos": 395,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "904fe19f-34d0-408d-86cb-7f26268f9a0a",
+                  "node_id_ref": "146154d8-6483-47b4-ba02-0a5c52534b4a",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "727814bf-499a-47fd-a267-912cf92e5614",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "05_Balance_model.ipynb",
+              "outputs": [
+                "best_model.pkl",
+                "prep_parameters.pkl"
+              ],
+              "env_vars": [
+                "AUGMENT=1"
+              ],
+              "kubernetes_secrets": [],
+              "dependencies": [
+                "balance_model_training.py"
+              ],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
+              "cpu": 1.5
+            },
+            "label": "balance_and_model_training",
+            "ui_data": {
+              "label": "balance_and_model_training",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 291,
+              "y_pos": 509,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "d99b0325-712a-474d-b681-7ae8bf22780b",
+                  "node_id_ref": "f9c37f28-30b0-46d4-9833-3beaa183f175",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "1d4a43d4-13d3-4983-8292-4ee6116e374e",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "filename": "06_Model_holdout.ipynb",
+              "outputs": [],
+              "env_vars": [
+                "TEST_SPLIT=test.csv"
+              ],
+              "kubernetes_secrets": [],
+              "dependencies": [],
+              "include_subdirectories": false,
+              "mounted_volumes": [],
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
+              "cpu": 1.5
+            },
+            "label": "holdout_inference",
+            "ui_data": {
+              "label": "holdout_inference",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 170,
+              "y_pos": 625,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "f85d5303-7735-4df1-bd50-05162af81edd",
+                  "node_id_ref": "03317305-90fa-42e9-8523-e85c71999cb2",
+                  "port_id_ref": "outPort"
+                },
+                {
+                  "id": "e290de38-42ee-4d45-9568-9b93425f7e9a",
+                  "node_id_ref": "727814bf-499a-47fd-a267-912cf92e5614",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": [
+            {
+              "id": "8292800d-8b0b-48a9-ac46-6af5c0a9df17",
+              "x_pos": 414,
+              "y_pos": 44,
+              "width": 175,
+              "height": 59,
+              "content": "Reading the dataset to be processed and data quality improved.",
+              "associated_id_refs": [
+                {
+                  "node_ref": "eb4c27cb-6941-4887-b2ea-a6251a4c2217"
+                }
+              ]
+            },
+            {
+              "id": "5c098071-3cd1-4d04-8872-b55cadb0133f",
+              "x_pos": 527,
+              "y_pos": 276,
+              "width": 175,
+              "height": 45,
+              "content": "Profiling the training data split.",
+              "associated_id_refs": [
+                {
+                  "node_ref": "146154d8-6483-47b4-ba02-0a5c52534b4a"
+                }
+              ]
+            },
+            {
+              "id": "db940928-46a3-4417-8a30-f5c30a76005c",
+              "x_pos": 545,
+              "y_pos": 502,
+              "width": 175,
+              "height": 60,
+              "content": "Synthetic data generation to balance minority class",
+              "associated_id_refs": [
+                {
+                  "node_ref": "727814bf-499a-47fd-a267-912cf92e5614"
+                }
+              ]
+            }
+          ]
+        },
+        "version": 7,
+        "properties": {
+          "name": "credit_scoring_data_quality",
+          "runtime": "Generic"
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}
