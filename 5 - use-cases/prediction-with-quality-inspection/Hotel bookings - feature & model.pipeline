@@ -16,25 +16,25 @@
             "component_parameters": {
               "filename": "1_read_data.ipynb",
               "outputs": [
-                "data.csv",
-                "metadata.pkl"
+                "bookings_metadata.pkl",
+                "bookings.pkl"
               ],
               "env_vars": [],
               "dependencies": [
-                "hotel_booking.csv"
+                "functions/*.py"
               ],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 8
             },
-            "label": "",
+            "label": "read_bookings",
             "ui_data": {
-              "label": "1_read_data.ipynb",
+              "label": "read_bookings",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 50,
-              "y_pos": 117.5,
+              "x_pos": 180,
+              "y_pos": 50,
               "description": "Run notebook file"
             }
           },
@@ -85,17 +85,17 @@
               ],
               "dependencies": [],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 8
             },
-            "label": "",
+            "label": "train_validation",
             "ui_data": {
-              "label": "2_dataset_split.ipynb",
+              "label": "train_validation",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 290,
-              "y_pos": 117.5,
+              "x_pos": 180,
+              "y_pos": 165,
               "description": "Run notebook file"
             }
           },
@@ -149,9 +149,11 @@
                 "SET_PATH=train.pkl",
                 "DATA_SPLIT=train"
               ],
-              "dependencies": [],
+              "dependencies": [
+                "functions/*.py"
+              ],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 8
@@ -160,8 +162,8 @@
             "ui_data": {
               "label": "training_data_profiling",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 530,
-              "y_pos": 175,
+              "x_pos": 300,
+              "y_pos": 280,
               "description": "Run notebook file"
             }
           },
@@ -215,9 +217,11 @@
                 "SET_PATH=validation.pkl",
                 "DATA_SPLIT=validation"
               ],
-              "dependencies": [],
+              "dependencies": [
+                "functions/*.py"
+              ],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 6
@@ -226,8 +230,8 @@
             "ui_data": {
               "label": "validation_data_profiling",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 770,
-              "y_pos": 50,
+              "x_pos": 50,
+              "y_pos": 395,
               "description": "Run notebook file"
             }
           },
@@ -286,9 +290,11 @@
                 "KEEP_DUP=first",
                 "STANDARD_NUM=True"
               ],
-              "dependencies": [],
+              "dependencies": [
+                "functions/*.py"
+              ],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 8
@@ -297,8 +303,8 @@
             "ui_data": {
               "label": "traindata_prep",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 770,
-              "y_pos": 175,
+              "x_pos": 300,
+              "y_pos": 395,
               "description": "Run notebook file"
             }
           },
@@ -351,19 +357,21 @@
               "env_vars": [
                 "DATA_SPLIT=validation"
               ],
-              "dependencies": [],
+              "dependencies": [
+                "functions/*.py"
+              ],
               "include_subdirectories": false,
               "cpu": 1,
               "gpu": 0,
               "memory": 8,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu"
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu"
             },
             "label": "validation_dataprep",
             "ui_data": {
               "label": "validation_dataprep",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 1010,
-              "y_pos": 60,
+              "x_pos": 60,
+              "y_pos": 510,
               "description": "Run notebook file"
             }
           },
@@ -420,9 +428,11 @@
                 "SET_PATH=dataprep_train.pkl",
                 "DATA_SPLIT=train"
               ],
-              "dependencies": [],
+              "dependencies": [
+                "functions/*.py"
+              ],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 6
@@ -431,8 +441,8 @@
             "ui_data": {
               "label": "Dataprep_profiling",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 1009,
-              "y_pos": 253,
+              "x_pos": 300,
+              "y_pos": 509,
               "description": "Run notebook file"
             }
           },
@@ -483,9 +493,11 @@
                 "model.pkl"
               ],
               "env_vars": [],
-              "dependencies": [],
+              "dependencies": [
+                "functions/*.py"
+              ],
               "include_subdirectories": false,
-              "runtime_image": "ydata220608140442.azurecr.io/pipelines_ydata:0.42.13-cpu",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.40-cpu",
               "cpu": 1,
               "gpu": 0,
               "memory": 8
@@ -494,8 +506,8 @@
             "ui_data": {
               "label": "6_model_training.ipynb",
               "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 1250,
-              "y_pos": 151.25,
+              "x_pos": 247,
+              "y_pos": 625,
               "description": "Run notebook file"
             }
           },
