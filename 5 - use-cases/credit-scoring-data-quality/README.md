@@ -32,7 +32,6 @@ In this usecase we will explore not only an iterative, traceable and comparable 
    * Compute the performance of the classifiers trained with the improved data, on the holdout set.
 
 ### Artifacts
-* credit_scoring_data_quality.pipeline
-* credit_scoring_data_quality.yaml
+* credit_scoring.pipeline
 
 Enjoy! ✌️
