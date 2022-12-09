@@ -1,0 +1,338 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "8f75ce77-82ec-4883-85d3-e1654475aad9",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "functions/saving_functions.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [
+                "data.pkl",
+                "fraud.pkl",
+                "non_fraud.pkl",
+                "metadata.pkl"
+              ],
+              "env_vars": [
+                {
+                  "env_var": "DATASOURCE_ID",
+                  "value": "5d20431f-5b12-4c05-9f7d-b300c3665817"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "01_read_data.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1
+            },
+            "label": "",
+            "ui_data": {
+              "label": "01_read_data.ipynb",
+              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
+              "x_pos": 31,
+              "y_pos": 183,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "21880e8b-4daf-4ea1-b982-14a5ab4e8699",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "functions/saving_functions.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [
+                "sample.pkl",
+                "pipeline_config.pkl"
+              ],
+              "env_vars": [
+                {
+                  "env_var": "SAMPLE_SIZE",
+                  "value": "0"
+                },
+                {
+                  "env_var": "OUTPUT_PATH",
+                  "value": "sample.pkl"
+                },
+                {
+                  "env_var": "AUGMENT",
+                  "value": "0"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "02_synthesizer.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1
+            },
+            "label": "",
+            "ui_data": {
+              "label": "02_synthesizer.ipynb",
+              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
+              "x_pos": 273,
+              "y_pos": 229,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "b8f46a3d-d714-4f00-bccd-9e8386f4b6fc",
+                  "node_id_ref": "8f75ce77-82ec-4883-85d3-e1654475aad9",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "20279745-a6b1-4e4d-8ded-80888b4429b4",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "functions/saving_functions.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [
+                "augmented.pkl"
+              ],
+              "env_vars": [
+                {
+                  "env_var": "SAMPLE_PATH",
+                  "value": "sample.pkl"
+                },
+                {
+                  "env_var": "OUTPUT_PATH",
+                  "value": "augmented.pkl"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "03_concat_data.ipynb",
+              "cpu": 1,
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu"
+            },
+            "label": "",
+            "ui_data": {
+              "label": "03_concat_data.ipynb",
+              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
+              "x_pos": 504,
+              "y_pos": 194,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "f0bf5643-2058-461c-89e4-44d5e6a387fb",
+                  "node_id_ref": "21880e8b-4daf-4ea1-b982-14a5ab4e8699",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbdaaf03-6dba-4b32-abc2-78adc8c2454a",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "functions/saving_functions.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [
+                {
+                  "env_var": "DATA_PATH",
+                  "value": "augmented.pkl"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "04_classifier.ipynb",
+              "cpu": 1,
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu"
+            },
+            "label": "",
+            "ui_data": {
+              "label": "04_classifier.ipynb",
+              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
+              "x_pos": 733,
+              "y_pos": 229,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "ddd50945-6f51-4dca-b768-4172a108a172",
+                  "node_id_ref": "20279745-a6b1-4e4d-8ded-80888b4429b4",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        },
+        "version": 8,
+        "properties": {
+          "pipeline_defaults": {
+            "mounted_volumes": [],
+            "kubernetes_pod_labels": [],
+            "kubernetes_pod_annotations": [],
+            "kubernetes_tolerations": [],
+            "kubernetes_shared_mem_size": {},
+            "kubernetes_secrets": [],
+            "env_vars": []
+          },
+          "name": "credit_fraud",
+          "runtime": "Generic"
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}
