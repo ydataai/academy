@@ -14,26 +14,32 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "01_Read_dataset.ipynb",
+              "dependencies": [
+                "ydata-academy.json"
+              ],
+              "include_subdirectories": false,
               "outputs": [
                 "metadata.pkl",
                 "train.csv",
                 "test.csv"
               ],
               "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
               "kubernetes_secrets": [],
-              "dependencies": [
-                "cs-training.csv"
-              ],
-              "include_subdirectories": false,
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
-              "cpu": 1
+              "filename": "01_Read_dataset.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
             },
             "label": "read_dataset",
             "ui_data": {
               "label": "read_dataset",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
               "x_pos": 170,
               "y_pos": 50,
               "description": "Run notebook file"
@@ -74,28 +80,43 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "02_Data_profiling.ipynb",
-              "outputs": [],
-              "env_vars": [
-                "DATASET_PATH=train.csv",
-                "LABEL_NAME=SeriousDlqin2yrs",
-                "DATA_SPLIT=train"
-              ],
-              "kubernetes_secrets": [],
               "dependencies": [
-                "cs-training.csv"
+                "ydata-academy.json"
               ],
               "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [
+                {
+                  "env_var": "DATASET_PATH",
+                  "value": "train.csv"
+                },
+                {
+                  "env_var": "LABEL_NAME",
+                  "value": "SeriousDlqin2yrs"
+                },
+                {
+                  "env_var": "DATA_SPLIT",
+                  "value": "train"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
-              "cpu": 1
+              "filename": "02_Data_profiling.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
             },
             "label": "train_data_profiling",
             "ui_data": {
               "label": "train_data_profiling",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 290,
-              "y_pos": 165,
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 333,
+              "y_pos": 134,
               "description": "Run notebook file"
             }
           },
@@ -141,26 +162,43 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "02_Data_profiling.ipynb",
+              "dependencies": [
+                "ydata-academy.json"
+              ],
+              "include_subdirectories": false,
               "outputs": [],
               "env_vars": [
-                "DATASET_PATH=test.csv",
-                "LABEL_NAME=SeriousDlqin2yrs",
-                "DATA_SPLIT=Test"
+                {
+                  "env_var": "DATASET_PATH",
+                  "value": "test.csv"
+                },
+                {
+                  "env_var": "LABEL_NAME",
+                  "value": "SeriousDlqin2yrs"
+                },
+                {
+                  "env_var": "DATA_SPLIT",
+                  "value": "Test"
+                }
               ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
               "kubernetes_secrets": [],
-              "dependencies": [],
-              "include_subdirectories": false,
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
-              "cpu": 1
+              "filename": "02_Data_profiling.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1,
+              "gpu": 0,
+              "memory": 8
             },
             "label": "holdout_data_profiling",
             "ui_data": {
               "label": "holdout_data_profiling",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 50,
-              "y_pos": 510,
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 30,
+              "y_pos": 329,
               "description": "Run notebook file"
             }
           },
@@ -206,31 +244,41 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "03_Profiling_impute_missing.ipynb",
+              "dependencies": [],
+              "include_subdirectories": false,
               "outputs": [
                 "prep_traindata.csv",
                 "imputer.pkl",
                 "prep_parameters.pkl"
               ],
               "env_vars": [
-                "LABEL=SeriousDlqin2yrs",
-                "IMPUTATION_STRATEGY=1"
+                {
+                  "env_var": "LABEL",
+                  "value": "SeriousDlqin2yrs"
+                },
+                {
+                  "env_var": "IMPUTATION_STRATEGY",
+                  "value": "1"
+                }
               ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
               "kubernetes_secrets": [],
-              "dependencies": [
-                "cs-training.csv"
-              ],
-              "include_subdirectories": false,
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
-              "cpu": 1.5
+              "filename": "03_Profiling_impute_missing.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1.5,
+              "gpu": 0,
+              "memory": 8
             },
             "label": "profile_and_impute_missing",
             "ui_data": {
               "label": "profile_and_impute_missing",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 290,
-              "y_pos": 280,
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 337,
+              "y_pos": 248,
               "description": "Run notebook file"
             }
           },
@@ -276,27 +324,36 @@
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "04_drop_duplicates.ipynb",
+              "dependencies": [],
+              "include_subdirectories": false,
               "outputs": [
                 "prep_traindata.csv",
                 "prep_parameters.pkl"
               ],
               "env_vars": [
-                "DROP=0"
+                {
+                  "env_var": "DROP",
+                  "value": "0"
+                }
               ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
               "kubernetes_secrets": [],
-              "dependencies": [],
-              "include_subdirectories": false,
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
               "mounted_volumes": [],
+              "filename": "04_drop_duplicates.ipynb",
               "cpu": 1,
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu"
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "gpu": 0,
+              "memory": 8
             },
             "label": "drop_duplicates",
             "ui_data": {
               "label": "drop_duplicates",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 290,
-              "y_pos": 395,
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 331,
+              "y_pos": 345,
               "description": "Run notebook file"
             }
           },
@@ -337,97 +394,38 @@
           ]
         },
         {
-          "id": "727814bf-499a-47fd-a267-912cf92e5614",
-          "type": "execution_node",
-          "op": "execute-notebook-node",
-          "app_data": {
-            "component_parameters": {
-              "filename": "05_Balance_model.ipynb",
-              "outputs": [
-                "best_model.pkl",
-                "prep_parameters.pkl"
-              ],
-              "env_vars": [
-                "AUGMENT=1"
-              ],
-              "kubernetes_secrets": [],
-              "dependencies": [
-                "balance_model_training.py"
-              ],
-              "include_subdirectories": false,
-              "mounted_volumes": [],
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
-              "cpu": 1.5
-            },
-            "label": "balance_and_model_training",
-            "ui_data": {
-              "label": "balance_and_model_training",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 291,
-              "y_pos": 509,
-              "description": "Run notebook file"
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "id": "d99b0325-712a-474d-b681-7ae8bf22780b",
-                  "node_id_ref": "f9c37f28-30b0-46d4-9833-3beaa183f175",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
           "id": "1d4a43d4-13d3-4983-8292-4ee6116e374e",
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
             "component_parameters": {
-              "filename": "06_Model_holdout.ipynb",
-              "outputs": [],
-              "env_vars": [
-                "TEST_SPLIT=test.csv"
-              ],
-              "kubernetes_secrets": [],
               "dependencies": [],
               "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [
+                {
+                  "env_var": "TEST_SPLIT",
+                  "value": "test.csv"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.45.19-cpu",
-              "cpu": 1.5
+              "filename": "06_Model_holdout.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1.5,
+              "gpu": 0,
+              "memory": 8
             },
             "label": "holdout_inference",
             "ui_data": {
               "label": "holdout_inference",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 170,
-              "y_pos": 625,
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 165,
+              "y_pos": 668,
               "description": "Run notebook file"
             }
           },
@@ -450,8 +448,148 @@
                   "port_id_ref": "outPort"
                 },
                 {
-                  "id": "e290de38-42ee-4d45-9568-9b93425f7e9a",
-                  "node_id_ref": "727814bf-499a-47fd-a267-912cf92e5614",
+                  "id": "9b6618eb-bfbe-4de7-9eb0-9b678325beff",
+                  "node_id_ref": "f69be843-546b-400e-856c-033f521448cc",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "6ce0e32b-d7e2-4bf7-977b-7f2ac6770e4d",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "05_outliers.ipynb",
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "cpu": 1
+            },
+            "label": "outliers",
+            "ui_data": {
+              "label": "outliers",
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 329,
+              "y_pos": 452,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "1d248779-0a61-440c-9fc7-ff1bd3fb1416",
+                  "node_id_ref": "f9c37f28-30b0-46d4-9833-3beaa183f175",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "f69be843-546b-400e-856c-033f521448cc",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "balance_model_training.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [
+                "prep_parameters.pkl",
+                "best_model.pkl"
+              ],
+              "env_vars": [
+                {
+                  "env_var": "AUGMENT",
+                  "value": "1"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "05_Balance_model.ipynb",
+              "cpu": 1,
+              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu"
+            },
+            "label": "balance_data",
+            "ui_data": {
+              "label": "balance_data",
+              "image": "/lab/73c9e7e7-879d-4683-8ac1-3c3472f45010/b81ae1d3-8ba3-4f83-a6c3-facf4f6b8e19/static/elyra/notebook.svg",
+              "x_pos": 326,
+              "y_pos": 554,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "a1a5d641-cdfe-4675-8b9c-cb78e2444191",
+                  "node_id_ref": "6ce0e32b-d7e2-4bf7-977b-7f2ac6770e4d",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -504,21 +642,30 @@
             },
             {
               "id": "db940928-46a3-4417-8a30-f5c30a76005c",
-              "x_pos": 545,
-              "y_pos": 502,
+              "x_pos": 515,
+              "y_pos": 534,
               "width": 175,
               "height": 60,
               "content": "Synthetic data generation to balance minority class",
               "associated_id_refs": [
                 {
-                  "node_ref": "727814bf-499a-47fd-a267-912cf92e5614"
+                  "node_ref": "f69be843-546b-400e-856c-033f521448cc"
                 }
               ]
             }
           ]
         },
-        "version": 7,
+        "version": 8,
         "properties": {
+          "pipeline_defaults": {
+            "mounted_volumes": [],
+            "kubernetes_pod_labels": [],
+            "kubernetes_tolerations": [],
+            "kubernetes_pod_annotations": [],
+            "kubernetes_shared_mem_size": {},
+            "kubernetes_secrets": [],
+            "env_vars": []
+          },
           "name": "credit_scoring_data_quality",
           "runtime": "Generic"
         }
