@@ -1,0 +1,41 @@
+{
+    "sdv": {
+        "single_columns": {
+            "metrics": {
+                "category_coverage": {
+                    "class": "sdmetrics.single_column.CategoryCoverage",
+                    "datatype": "CATEGORICAL"
+                },
+                "range_coverage": {
+                    "class": "sdmetrics.single_column.RangeCoverage",
+                    "datatype": "NUMERICAL"
+                },
+                "bounary_adherence": {
+                    "class": "sdmetrics.single_column.BoundaryAdherence",
+                    "datatype": "NUMERICAL"
+                },
+                "ks_complement": {
+                    "class": "sdmetrics.single_column.KSComplement",
+                    "datatype": "NUMERICAL"
+                },
+                "tv_complement": {
+                    "class": "sdmetrics.single_column.TVComplement",
+                    "datatype": "NUMERICAL"
+                },
+                "statistic_similarity": {
+                    "class": "sdmetrics.single_column.StatisticSimilarity",
+                    "datatype": "NUMERICAL"
+                },
+                "missing_value_similarity": {
+                    "class": "sdmetrics.single_column.MissingValueSimilarity"
+                }
+            },
+            "handler": "compute_single_column_metrics"
+        },
+        "column_pairs": {
+            "metrics": {
+            },
+            "handler": "compute_column_pairs_metrics"
+        }
+    }
+}
