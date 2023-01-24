@@ -1,6 +1,11 @@
 # Fabric Benchmark Suite
 
-The fabric benchmark suite is a highly configurable pipeline to assess the quality of synthesizer on various datasets and multiple aspects.
+Synthetic data is a cornerstone of Data Centric-AI, an approach that focuses primarily on data quality rather than models. For the past few years, synthetic data gained attention because of a wide range of applications such as data augmentation, rebalancing, bias and fairness adjustment or privacy to name a few. However, most of the literature focuses either on images or speech, leaving a tremendous number of datasets and domains of application aside.
+
+The fabric benchmark suite is a highly configurable benchmark suite to compare different data synthesizers according to several metrics and across various tabular datasets. The purpose of such suite is to allow a fair and systematic comparison between synthesizers on various datasets. We do not try to come with yet another set of metrics, but instead leave the user selecting the metrics to be used.
+
+In particular, as a first experiment, we ran the suite to compare Fabric synthesizer with the different synthesizers provided by Synthetic Data Vault (SDV), using SDV evaluation metrics. We found out that Fabric synthesizer is better than any SDV synthesizer on 4 out of 5 datasets, and statistically similar to the best SDV synthesizer on the last dataset. Fabric synthesizer provides an average result over all datasets and metrics 5pp higher compared to the second best method. In addition, Fabric synthesizer is 4x to a 100x faster to train than the second best method.
+
 
 ## Pipeline configuration
 
