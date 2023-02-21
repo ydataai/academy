@@ -18,6 +18,3 @@ The last step is the training of a classifier and validation on a holdout set.
 3. holdout_data_profiling (runs in parallel)
 4. balance_dataset & train classifier
 5. holdout_validation
-
-### How to create a pipeline in YData Fabric
-In this link you can find a quick demo on how to create a pipeline and best-practices to be followed.
