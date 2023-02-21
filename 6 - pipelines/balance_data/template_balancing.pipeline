@@ -236,83 +236,6 @@
           ]
         },
         {
-          "id": "6d0b803b-3327-406a-8a5e-6e78704993a4",
-          "type": "execution_node",
-          "op": "execute-notebook-node",
-          "app_data": {
-            "component_parameters": {
-              "pipeline_parameters": [
-                "label",
-                "augment",
-                "sample_size"
-              ],
-              "dependencies": [
-                "balance_model_training.py"
-              ],
-              "include_subdirectories": false,
-              "outputs": [
-                "prep_parameters.pkl",
-                "best_model.pkl"
-              ],
-              "env_vars": [],
-              "kubernetes_pod_annotations": [],
-              "kubernetes_pod_labels": [],
-              "kubernetes_secrets": [],
-              "kubernetes_shared_mem_size": {},
-              "kubernetes_tolerations": [],
-              "mounted_volumes": [],
-              "filename": "03_Balance_model.ipynb",
-              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.46.97-cpu",
-              "cpu": 1,
-              "memory": 8,
-              "gpu": 0
-            },
-            "label": "balance_dataset",
-            "ui_data": {
-              "label": "balance_dataset",
-              "image": "/lab/44617fb3-5ada-4c33-b0f3-a7c1a3f1a3f5/c796c43f-43ed-4315-8401-84c2ee0221b5/static/elyra/notebook.svg",
-              "x_pos": 516,
-              "y_pos": 125,
-              "description": "Run notebook file"
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "id": "d12a63da-d560-4168-8133-6d84db87447d",
-                  "node_id_ref": "8643fc4c-ce02-4c8e-b923-9a1b4fd76866",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
           "id": "3a846627-4bd5-47f9-93b1-7620f7e8cb05",
           "type": "execution_node",
           "op": "execute-notebook-node",
@@ -372,8 +295,82 @@
                   "port_id_ref": "outPort"
                 },
                 {
-                  "id": "9713069a-700f-41d3-80fb-e934a3399d91",
-                  "node_id_ref": "6d0b803b-3327-406a-8a5e-6e78704993a4",
+                  "id": "535dcbd8-d617-4ed5-b7d4-f8186d774140",
+                  "node_id_ref": "164e6017-6f0b-4928-99dc-3193fe994ec0",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "164e6017-6f0b-4928-99dc-3193fe994ec0",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "pipeline_parameters": [
+                "augment",
+                "sample"
+              ],
+              "dependencies": [
+                "balance_model_training.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [
+                "prep_parameters.pkl",
+                "best_model.pkl"
+              ],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "03_Balance_model.ipynb",
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.46.97-cpu",
+              "cpu": 1
+            },
+            "label": "augment",
+            "ui_data": {
+              "label": "augment",
+              "image": "/lab/44617fb3-5ada-4c33-b0f3-a7c1a3f1a3f5/c796c43f-43ed-4315-8401-84c2ee0221b5/static/elyra/notebook.svg",
+              "x_pos": 516,
+              "y_pos": 129,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "af6f786f-7419-4d78-83e1-d6b7f479ce73",
+                  "node_id_ref": "8643fc4c-ce02-4c8e-b923-9a1b4fd76866",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -428,12 +425,12 @@
               "description": "balance the dataset",
               "default_value": {
                 "type": "Bool",
-                "value": false
+                "value": true
               },
               "required": false
             },
             {
-              "name": "sample_size",
+              "name": "sample",
               "description": "",
               "default_value": {
                 "type": "Integer",

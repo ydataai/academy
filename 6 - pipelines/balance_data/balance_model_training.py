@@ -78,4 +78,4 @@ def train_model(X: pd.DataFrame,
                       'precision': precision_score(y_test, y_pred),
                       'roc_auc': roc_auc_score(y_test, y_pred),
                       'accuracy': accuracy_score(y_test, y_pred)})
-    return pd.DataFrame(results), trained_models
+    return pd.DataFrame(results), trained_models, sample_size
