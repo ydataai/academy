@@ -26,13 +26,13 @@
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "filename": "02-Generate-Synthetic-Data.ipynb",
+              "filename": "02- GUI SDK - Generate-Synthetic-Data.ipynb",
               "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.48.2-cpu"
             },
             "label": "Generate Synthetic Data",
             "ui_data": {
               "label": "Generate Synthetic Data",
-              "image": "/lab/cca39ac8-529a-445a-9dca-480a30361834/d3b82732-6a9c-4098-9117-89e7d8e906c5/static/elyra/notebook.svg",
+              "image": "/lab/768fac2a-8b23-4fab-952e-3a226a0ae7cb/780a6484-8517-46c4-8f25-81f5910a5610/static/elyra/notebook.svg",
               "x_pos": 101,
               "y_pos": 55.5,
               "description": "Run notebook file"
@@ -75,7 +75,16 @@
         "version": 8,
         "properties": {
           "name": "02-Generate-Synthetic-Data",
-          "runtime": "Generic"
+          "runtime": "Generic",
+          "pipeline_defaults": {
+            "kubernetes_pod_annotations": [],
+            "kubernetes_pod_labels": [],
+            "kubernetes_tolerations": [],
+            "kubernetes_shared_mem_size": {},
+            "mounted_volumes": [],
+            "kubernetes_secrets": [],
+            "env_vars": []
+          }
         }
       },
       "runtime_ref": ""
