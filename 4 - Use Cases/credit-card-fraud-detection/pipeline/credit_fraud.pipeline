@@ -20,8 +20,6 @@
               "include_subdirectories": false,
               "outputs": [
                 "data.pkl",
-                "fraud.pkl",
-                "non_fraud.pkl",
                 "metadata.pkl"
               ],
               "env_vars": [
@@ -37,13 +35,13 @@
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
               "filename": "01_read_data.ipynb",
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.56.2-cpu",
               "cpu": 1
             },
-            "label": "",
+            "label": "Read data",
             "ui_data": {
-              "label": "01_read_data.ipynb",
-              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
+              "label": "Read data",
+              "image": "/lab/7f5bc8e3-5c7b-4c6e-90cf-27594b07e8e8/14f05bb0-284a-4448-bef2-45dae9e0e6e6/static/elyra/notebook.svg",
               "x_pos": 31,
               "y_pos": 183,
               "description": "Run notebook file"
@@ -89,7 +87,7 @@
               ],
               "include_subdirectories": false,
               "outputs": [
-                "sample.pkl",
+                "data.pkl",
                 "pipeline_config.pkl"
               ],
               "env_vars": [
@@ -112,16 +110,16 @@
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "filename": "02_synthesizer.ipynb",
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu",
-              "cpu": 1
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.56.2-cpu",
+              "cpu": 1,
+              "filename": "02_synthesizer.ipynb"
             },
-            "label": "",
+            "label": "Fraud augmentation",
             "ui_data": {
-              "label": "02_synthesizer.ipynb",
-              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
+              "label": "Fraud augmentation",
+              "image": "/lab/7f5bc8e3-5c7b-4c6e-90cf-27594b07e8e8/14f05bb0-284a-4448-bef2-45dae9e0e6e6/static/elyra/notebook.svg",
               "x_pos": 273,
-              "y_pos": 229,
+              "y_pos": 230,
               "description": "Run notebook file"
             }
           },
@@ -141,84 +139,6 @@
                 {
                   "id": "b8f46a3d-d714-4f00-bccd-9e8386f4b6fc",
                   "node_id_ref": "8f75ce77-82ec-4883-85d3-e1654475aad9",
-                  "port_id_ref": "outPort"
-                }
-              ]
-            }
-          ],
-          "outputs": [
-            {
-              "id": "outPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Output Port"
-                }
-              }
-            }
-          ]
-        },
-        {
-          "id": "20279745-a6b1-4e4d-8ded-80888b4429b4",
-          "type": "execution_node",
-          "op": "execute-notebook-node",
-          "app_data": {
-            "component_parameters": {
-              "dependencies": [
-                "functions/saving_functions.py"
-              ],
-              "include_subdirectories": false,
-              "outputs": [
-                "augmented.pkl"
-              ],
-              "env_vars": [
-                {
-                  "env_var": "SAMPLE_PATH",
-                  "value": "sample.pkl"
-                },
-                {
-                  "env_var": "OUTPUT_PATH",
-                  "value": "augmented.pkl"
-                }
-              ],
-              "kubernetes_pod_annotations": [],
-              "kubernetes_pod_labels": [],
-              "kubernetes_secrets": [],
-              "kubernetes_shared_mem_size": {},
-              "kubernetes_tolerations": [],
-              "mounted_volumes": [],
-              "filename": "03_concat_data.ipynb",
-              "cpu": 1,
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu"
-            },
-            "label": "",
-            "ui_data": {
-              "label": "03_concat_data.ipynb",
-              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
-              "x_pos": 504,
-              "y_pos": 194,
-              "description": "Run notebook file"
-            }
-          },
-          "inputs": [
-            {
-              "id": "inPort",
-              "app_data": {
-                "ui_data": {
-                  "cardinality": {
-                    "min": 0,
-                    "max": -1
-                  },
-                  "label": "Input Port"
-                }
-              },
-              "links": [
-                {
-                  "id": "f0bf5643-2058-461c-89e4-44d5e6a387fb",
-                  "node_id_ref": "21880e8b-4daf-4ea1-b982-14a5ab4e8699",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -262,16 +182,16 @@
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "filename": "04_classifier.ipynb",
+              "filename": "03_classifier.ipynb",
               "cpu": 1,
-              "runtime_image": "ydata220830144220.azurecr.io/pipelines_ydata:0.46.24-cpu"
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.56.2-cpu"
             },
-            "label": "",
+            "label": "XGboost Classifer",
             "ui_data": {
-              "label": "04_classifier.ipynb",
-              "image": "/lab/da8e48bc-001a-401f-a956-67aed835f19b/fafaca6b-b2e1-45e9-94b7-2a58cf01b7da/static/elyra/notebook.svg",
-              "x_pos": 733,
-              "y_pos": 229,
+              "label": "XGboost Classifer",
+              "image": "/lab/7f5bc8e3-5c7b-4c6e-90cf-27594b07e8e8/14f05bb0-284a-4448-bef2-45dae9e0e6e6/static/elyra/notebook.svg",
+              "x_pos": 521,
+              "y_pos": 216,
               "description": "Run notebook file"
             }
           },
@@ -289,8 +209,8 @@
               },
               "links": [
                 {
-                  "id": "ddd50945-6f51-4dca-b768-4172a108a172",
-                  "node_id_ref": "20279745-a6b1-4e4d-8ded-80888b4429b4",
+                  "id": "e6e4b06a-ae85-4967-94cf-8e98297ec048",
+                  "node_id_ref": "21880e8b-4daf-4ea1-b982-14a5ab4e8699",
                   "port_id_ref": "outPort"
                 }
               ]
@@ -320,12 +240,12 @@
         "properties": {
           "pipeline_defaults": {
             "mounted_volumes": [],
-            "kubernetes_pod_labels": [],
             "kubernetes_pod_annotations": [],
-            "kubernetes_tolerations": [],
+            "kubernetes_pod_labels": [],
             "kubernetes_shared_mem_size": {},
-            "kubernetes_secrets": [],
-            "env_vars": []
+            "kubernetes_tolerations": [],
+            "env_vars": [],
+            "kubernetes_secrets": []
           },
           "name": "credit_fraud",
           "runtime": "Generic"
