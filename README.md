@@ -14,15 +14,16 @@ Whether you're just getting started with synthetic data or diving into advanced 
 
 ## 🗂️ Repository Structure
 
-| Folder                               | Description                                                                         |
-|--------------------------------------|-------------------------------------------------------------------------------------|
+| Folder                               | Description                                                                     |
+|--------------------------------------|---------------------------------------------------------------------------------|
 | `1. Data & Connectors`               | Working with connectors, datasets, schema definitions, and metadata exploration |
-| `2. Data Profiling`                  | Using `ydata-sdk` to profile datasets for structure, quality, and distributions     |
-| `3. Synthetic Data Generation`       | Creating synthetic data using ydata's generative models                             |
-| `4. Generative AI - Documents & Q&A` | Generation of synthetic documents and Q&A pairs from existing documents             |
-| `5. Synthetic Data Evaluation`       | Measuring utility, fidelity, and privacy of synthetic data                          |
-| `6. Anonymizer`                      | Applying anonymization techniques to protect sensitive data                         |
-| `7. Anonymizer`                      | Data preparation auxiliar methods                                                   |
+| `2. Data Profiling`                  | Using `ydata-sdk` to profile datasets for structure, quality, and distributions |
+| `3. Synthetic Data Generation`       | Creating synthetic data using ydata's generative models                         |
+| `4. Generative AI - Documents & Q&A` | Generation of synthetic documents and Q&A pairs from existing documents         |
+| `5. Synthetic Data Evaluation`       | Measuring utility, fidelity, and privacy of synthetic data                      |
+| `6. Anonymizer`                      | Applying anonymization techniques to protect sensitive data                     |
+| `7. Data Preparation & Cleaning`     | Data preparation auxiliar methods                                               |
+| `8. Use Cases`                       | A set of ready to use-cases templated with ydata-sdk                            |
 
 ## 🚀 Getting Started
 
