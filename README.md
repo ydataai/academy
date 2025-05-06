@@ -1,16 +1,51 @@
-# YData Academy
+# 🧠 YData Academy: ydata-sdk Tutorials & Use Cases
 
-In here you'll find examples, code samples, tutorials and integrations with other platforms.
+Welcome to **YData Academy**, a collection of hands-on tutorials and use-cases built entirely with the [ydata-sdk](https://github.com/ydataai/ydata-sdk).
 
-**Table of Contents**
+Whether you're just getting started with synthetic data or diving into advanced data anonymization and generative AI, this repository will guide you through each core capability of `ydata-sdk`.
 
-| Folder                      | Contents                                                                                                                                             |
-|-----------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `0-Quickstart`               | If your are new to YData Fabric Labs, find here examples on how to profile the data and generate synthetic data                                     |
-| `1-Data Catalog`             | Learn Fabric's `Data Catalog`, scalable tools to connect to local/remote object storages and relational databases. Leverage the Metadata component to explore your data characteristics and properties.                |
-| `2-Synthetic Data`             | Tutorials and templates to get started with YData Fabric Synthetic Data generation                |
-| `3-Pipelines`          | Tutorials and templates to get started with YData Fabric Pipelines   |
-| `4-Use-cases`               | Use cases and recipes applying synthesization technologies to solve concrete business problems in tabular and time series datasets                   |
-| `5-Integrations`            | Showcasing how YData's Fabric integrate with other tools (both downstream and upstream) in the ML project lifecycle                                  |
+## 📦 About ydata-sdk
 
-Visit us at https://ydata.ai. Enjoy! ✌️
+[`ydata-sdk`](https://github.com/ydataai/ydata-sdk) is a Python package designed to simplify data-centric AI development. It includes tools for:
+- Data exploration and profiling
+- Synthetic data generation and evaluation
+- Data anonymization and privacy preservation
+- Integrations with generative AI for document analysis and Q&A (questions and answers pairs)
+
+## 🗂️ Repository Structure
+
+| Folder                               | Description                                                                         |
+|--------------------------------------|-------------------------------------------------------------------------------------|
+| `1. Data & Connectors`               | Working with connectors, datasets, schema definitions, and metadata exploration |
+| `2. Data Profiling`                  | Using `ydata-sdk` to profile datasets for structure, quality, and distributions     |
+| `3. Synthetic Data Generation`       | Creating synthetic data using ydata's generative models                             |
+| `4. Generative AI - Documents & Q&A` | Generation of synthetic documents and Q&A pairs from existing documents             |
+| `5. Synthetic Data Evaluation`       | Measuring utility, fidelity, and privacy of synthetic data                          |
+| `6. Anonymizer`                      | Applying anonymization techniques to protect sensitive data                         |
+| `7. Anonymizer`                      | Data preparation auxiliar methods                                                   |
+
+## 🚀 Getting Started
+
+### 📦 Installation
+
+```bash
+pip install ydata-sdk
+```
+
+### 🧪 Requirements
+- Python 3.9+
+
+### Running the Notebooks
+
+Clone the repo and start Jupyter:
+
+```
+git clone https://github.com/ydataai/academy
+cd academy
+jupyter notebook
+```
+
+Open any notebook under the folders to explore and run the code examples interactively.
+
+## 🤝 Contributing
+Contributions are welcome! Please see our [contribution guide](CONTRIBUTING.MD) for guidelines.
