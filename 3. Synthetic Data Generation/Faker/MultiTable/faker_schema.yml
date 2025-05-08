@@ -1,0 +1,288 @@
+account:
+  account_id:
+    primary_key: true
+    vartype: int
+  date:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  district_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: a1
+      parent_table: district
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  frequency:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+append:
+  col_1:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  col_2:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  col_3:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+card:
+  card_id:
+    primary_key: true
+    vartype: int
+  disp_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: disp_id
+      parent_table: disp
+      relation_type: <REQUIRED FIELD>
+    vartype: int
+  issued:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  type:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+client:
+  birth_number:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  client_id:
+    primary_key: true
+    vartype: int
+  district_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: a1
+      parent_table: district
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  first_name:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  full_name:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  last_name:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+disp:
+  account_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: account_id
+      parent_table: account
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  client_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: client_id
+      parent_table: client
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  disp_id:
+    primary_key: true
+    vartype: int
+  type:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+district:
+  a1:
+    primary_key: true
+    vartype: int
+  a10:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a11:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a12:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  a13:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a14:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a15:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  a16:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a2:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  a3:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  a4:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a5:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a6:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a7:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a8:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  a9:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+loan:
+  account_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: account_id
+      parent_table: account
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  amount:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  date:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  duration:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  interest_amount:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  interest_rate:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  loan_id:
+    primary_key: true
+    vartype: int
+  payments:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  status:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+order:
+  account_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: account_id
+      parent_table: account
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  account_to:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  amount:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  bank_to:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  k_symbol:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  order_id:
+    primary_key: true
+    vartype: int
+trans:
+  account:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  account_id:
+    foreign_key:
+      max_references: <REQUIRED FIELD>
+      min_references: <REQUIRED FIELD>
+      parent_column: account_id
+      parent_table: account
+      relation_type: <REQUIRED FIELD>
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  amount:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  balance:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  bank:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  date:
+    datatype: <REQUIRED FIELD> - choose from ['numerical', 'categorical']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: float
+  k_symbol:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  operation:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string
+  trans_id:
+    primary_key: true
+    vartype: int
+  type:
+    datatype: <REQUIRED FIELD> - choose from ['string', 'categorical', 'longtext']
+    missing: <OPTIONAL FIELD> - select the % of missing data for nullable column
+    vartype: string

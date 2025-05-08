@@ -1,7 +1,0 @@
-{
-       "output_files": {
-           "timers": "output/analysis/raw/timers.json",
-           "eval": "output/analysis/raw/eval.json",
-           "metrics": "output/analysis/raw/metrics.json"
-       }
-}

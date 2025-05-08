@@ -1,0 +1,382 @@
+account:
+  account_id:
+    vartype: int
+    primary_key: true
+  date:
+    datatype: date
+    max: '971229'
+    min: '930101'
+    vartype: date
+    format: '%y%m%d'
+  district_id:
+    foreign_key:
+      parent_column: A1
+      parent_table: district
+      relation_type: 1-n
+      min_references: 32
+      max_references: 554
+  frequency:
+    categories:
+    - POPLATEK MESICNE
+    - POPLATEK PO OBRATU
+    - POPLATEK TYDNE
+    datatype: categorical
+    vartype: string
+card:
+  card_id:
+    primary_key: True
+    vartype: int
+  disp_id:
+    foreign_key:
+      parent_column: disp_id
+      parent_table: disp
+      relation_type: 1-1
+      min_references: 1
+      max_references: 1
+  issued:
+    min: 931107 00:00:00
+    max: 981229 00:00:00
+    datatype: date
+    vartype: datetime
+    format: '%y%m%d %H:%M:%S'
+  type:
+    categories:
+    - classic
+    - gold
+    - junior
+    datatype: categorical
+    vartype: string
+client:
+  birth_number:
+    datatype: numerical
+    max: 875927
+    min: 110820
+    vartype: int
+  client_id:
+    primary_key: true
+    vartype: int
+  district_id:
+    foreign_key:
+      parent_column: A1
+      parent_table: district
+      relation_type: 1-n
+      min_references: 43
+      max_references: 663
+  fist_name:
+    datatype: string
+    vartype: string
+    characteristic: name
+  last_name:
+    datatype: string
+    vartype: string
+    characteristic: name
+disp:
+  account_id:
+    foreign_key:
+      parent_column: account_id
+      parent_table: account
+      relation_type: 1-n
+      min_references: 1
+      max_references: 2
+  client_id:
+    foreign_key:
+      parent_column: client_id
+      parent_table: client
+      relation_type: 1-1
+      min_references: 1
+      max_references: 1
+  disp_id:
+    primary_key: true
+    vartype: int
+  type:
+    categories:
+    - DISPONENT
+    - OWNER
+    datatype: categorical
+    vartype: string
+district:
+  A1:
+    primary_key: true
+    vartype: int
+  A10:
+    datatype: numerical
+    max: 100.0
+    min: 33.9
+    vartype: float
+  A11:
+    datatype: numerical
+    max: 12541
+    min: 8110
+    vartype: int
+  A12:
+    min: 0.29
+    max: 7.34
+    datatype: numerical
+    vartype: float
+  A13:
+    datatype: numerical
+    max: 9.4
+    min: 0.43
+    vartype: float
+  A14:
+    datatype: numerical
+    max: 167
+    min: 81
+    vartype: int
+  A15:
+    min: 818
+    max: 85677
+    datatype: numerical
+    vartype: int
+  A16:
+    datatype: numerical
+    max: 99107
+    min: 888
+    vartype: int
+  A2:
+    datatype: string
+    unique: true
+    vartype: string
+  A3:
+    categories:
+    - Prague
+    - central Bohemia
+    - east Bohemia
+    - north Bohemia
+    - north Moravia
+    - south Bohemia
+    - south Moravia
+    - west Bohemia
+    datatype: categorical
+    vartype: string
+  A4:
+    datatype: numerical
+    max: 1204953
+    min: 42821
+    unique: true
+    vartype: int
+  A5:
+    datatype: numerical
+    max: 151
+    min: 0
+    vartype: int
+  A6:
+    datatype: numerical
+    max: 70
+    min: 0
+    vartype: int
+  A7:
+    datatype: numerical
+    max: 20
+    min: 0
+    vartype: int
+  A8:
+    datatype: numerical
+    max: 5
+    min: 0
+    vartype: int
+  A9:
+    datatype: numerical
+    max: 11
+    min: 1
+    vartype: int
+loan:
+  account_id:
+    foreign_key:
+      parent_column: account_id
+      parent_table: account
+      relation_type: 1-1
+      min_references: 1
+      max_references: 1
+  amount:
+    datatype: numerical
+    max: 590820
+    min: 4980
+    vartype: int
+  date:
+    datatype: date
+    max: '981208'
+    min: '930705'
+    vartype: date
+    format: '%y%m%d'
+  duration:
+    datatype: numerical
+    max: 60
+    min: 12
+    vartype: int
+  loan_id:
+    primary_key: true
+    vartype: int
+  payments:
+    datatype: numerical
+    max: 9910.0
+    min: 304.0
+    vartype: float
+  status:
+    categories:
+    - A
+    - B
+    - C
+    - D
+    datatype: categorical
+    vartype: string
+  interest_rate:
+    datatype: numerical
+    vartype: float
+    min: 0.01
+    max: 0.1
+  interest_amount:
+    datatype: numerical
+    vartype: float
+    min: 153.12
+    max: 56664
+order:
+  account_id:
+    foreign_key:
+      parent_column: account_id
+      parent_table: account
+      relation_type: 1-n
+      min_references: 1
+      max_references: 5
+  account_to:
+    datatype: numerical
+    max: 99994199
+    min: 399
+    vartype: int
+  amount:
+    datatype: numerical
+    max: 14882.0
+    min: 1.0
+    vartype: float
+  bank_to:
+    categories:
+    - AB
+    - CD
+    - EF
+    - GH
+    - IJ
+    - KL
+    - MN
+    - OP
+    - QR
+    - ST
+    - UV
+    - WX
+    - YZ
+    datatype: categorical
+    vartype: string
+  k_symbol:
+    categories:
+    - LEASING
+    - POJISTNE
+    - SIPO
+    - UVER
+    datatype: categorical
+    vartype: string
+  order_id:
+    primary_key: true
+    vartype: int
+trans:
+  account:
+    min: 100000
+    max: 99999999
+    datatype: numerical
+    vartype: int
+    missings: 75.58
+  account_id:
+    foreign_key:
+      parent_column: account_id
+      parent_table: account
+      relation_type: 1-n
+      min_references: 1
+      max_references: 230
+  amount:
+    datatype: numerical
+    max: 87400.0
+    min: 0.0
+    vartype: float
+  balance:
+    datatype: numerical
+    max: 209637.0
+    min: -41125.7
+    vartype: float
+  bank:
+    categories:
+    - AB
+    - CD
+    - EF
+    - GH
+    - IJ
+    - KL
+    - MN
+    - OP
+    - QR
+    - ST
+    - UV
+    - WX
+    - YZ
+    datatype: categorical
+    vartype: string
+    missings: 77.08
+  date:
+    datatype: date
+    max: '981231'
+    min: '930101'
+    vartype: date
+    format: '%y%m%d'
+  k_symbol:
+    categories:
+    - DUCHOD
+    - POJISTNE
+    - SANKC. UROK
+    - SIPO
+    - SLUZBY
+    - UROK
+    - UVER
+    datatype: categorical
+    vartype: string
+    missings: 50.15
+  operation:
+    categories:
+    - PREVOD NA UCET
+    - PREVOD Z UCTU
+    - VKLAD
+    - VYBER
+    - VYBER KARTOU
+    datatype: categorical
+    vartype: string
+    missings: 18.51
+  trans_id:
+    datatype: numerical
+    max: 3682987
+    min: 1
+    unique: true
+    vartype: int
+  type:
+    categories:
+    - PRIJEM
+    - VYBER
+    - VYDAJ
+    datatype: categorical
+    vartype: string
+append:
+  col_1:
+    datatype: numerical
+    vartype: int
+    min: 1
+    max: 100
+    unique: true
+  col_2:
+    datatype: categorical
+    vartype: string
+    categories:
+    - a
+    - b
+    - c
+    - d
+  col_3:
+    vartype: int
+    datatype: numerical
+    min: 1
+    max: 2
+    missings: 30

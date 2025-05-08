@@ -1,0 +1,22 @@
+{
+   "sdv.adult":{
+      "name":"adult",
+      "origin":"sdv"
+   },
+    "sdv.census":{
+      "name":"census",
+      "origin":"sdv"
+   },
+    "sdv.asia":{
+      "name":"asia",
+      "origin":"sdv"
+   },
+    "sdv.covtype":{
+      "name":"covtype",
+      "origin":"sdv"
+   },
+    "sdv.mnist12":{
+      "name":"mnist12",
+      "origin":"sdv"
+   }
+}

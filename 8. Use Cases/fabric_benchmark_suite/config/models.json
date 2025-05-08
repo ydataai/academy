@@ -1,0 +1,40 @@
+{
+    "fabric.regular": {
+        "class": "ydata.synthesizers.regular.model.RegularSynthesizer",
+        "fit_params": {
+            "metadata": "fabric"
+        }
+    },
+    "sdv.tabular": {
+        "class": "sdv.lite.TabularPreset",
+        "dataset": "pandas",
+        "enabled": true,
+        "init_params": {
+            "metadata": "sdv",
+            "name": "FAST_ML"
+        }
+    },
+    "sdv.gaussian_copula": {
+        "class": "sdv.tabular.GaussianCopula",
+        "enabled": true,
+        "dataset": "pandas",
+        "init_params": {
+            "table_metadata": "sdv"
+        }
+    },
+    "sdv.copula_gan": {
+        "class": "sdv.tabular.CopulaGAN",
+        "dataset": "pandas",
+        "enabled": true
+    },
+    "sdv.tvae": {
+        "class": "sdv.tabular.TVAE",
+        "dataset": "pandas",
+        "enabled": true
+    },
+    "sdv.ctgan": {
+        "class": "sdv.tabular.CTGAN",
+        "dataset": "pandas",
+        "enabled": true
+    }
+}

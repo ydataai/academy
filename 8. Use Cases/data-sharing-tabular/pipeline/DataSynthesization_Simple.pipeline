@@ -1,0 +1,249 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "f756c7d9-433f-4cd1-a536-2c7becf0c3f8",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "label": "",
+            "filename": "read_data.ipynb",
+            "runtime_image": "docker.io/ydata/jupyterlab_python_torch-1.7:0.23.1-cpu",
+            "cpu": "",
+            "gpu": "",
+            "memory": "",
+            "outputs": [
+              "original_data.csv"
+            ],
+            "env_vars": [
+              "DASK_GATEWAY_URL=http://gateway.dask.svc.cluster.local:80",
+              "DATASOURCE_API_URL=\"\"",
+              "HOSTNAME=''\""
+            ],
+            "dependencies": [
+              "gcs_credentials.json"
+            ],
+            "include_subdirectories": false,
+            "ui_data": {
+              "label": "read_data.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 182,
+              "y_pos": 183,
+              "description": "Notebook"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "fbc53b3a-7fb0-4f41-8c5f-a4a6cddf5bd3",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "label": "",
+            "filename": "generate_data.ipynb",
+            "runtime_image": "ghcr.io/ydataai/ydata:0.23.2-pip-gpu",
+            "cpu": "",
+            "gpu": 1,
+            "memory": "",
+            "outputs": [
+              "generated_data.csv"
+            ],
+            "env_vars": [],
+            "dependencies": [
+              "telco_synth.pkl"
+            ],
+            "include_subdirectories": false,
+            "ui_data": {
+              "label": "generate_data.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 426.0000305175781,
+              "y_pos": 279,
+              "description": "Notebook"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "fb99f9f3-3117-4752-afb3-b857f51e696d",
+                  "node_id_ref": "f756c7d9-433f-4cd1-a536-2c7becf0c3f8",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "cf939b18-ed20-4e48-a44a-8f7f07851487",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "label": "",
+            "filename": "generate_report.ipynb",
+            "runtime_image": "ghcr.io/ydataai/ydata:0.23.2-pip-cpu",
+            "cpu": "",
+            "memory": "",
+            "outputs": [
+              "report_telco.pdf"
+            ],
+            "env_vars": [],
+            "dependencies": [],
+            "include_subdirectories": false,
+            "ui_data": {
+              "label": "generate_report.ipynb",
+              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "x_pos": 686,
+              "y_pos": 187,
+              "description": "Notebook"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "44f258c9-98ea-45ce-8326-d9b92439988f",
+                  "node_id_ref": "fbc53b3a-7fb0-4f41-8c5f-a4a6cddf5bd3",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "runtime": null,
+          "comments": [
+            {
+              "id": "bc2fb95a-a4af-4e07-97ff-e41ba4b063f1",
+              "x_pos": 53,
+              "y_pos": 49,
+              "width": 175,
+              "height": 46,
+              "class_name": "d3-comment-rect",
+              "content": "Read original data from data source\n",
+              "associated_id_refs": [
+                {
+                  "node_ref": "f756c7d9-433f-4cd1-a536-2c7becf0c3f8"
+                }
+              ]
+            },
+            {
+              "id": "9a8b59ca-a9fa-4f69-a6d2-5c9df90c5515",
+              "x_pos": 265,
+              "y_pos": 382,
+              "width": 175,
+              "height": 52,
+              "class_name": "d3-comment-rect",
+              "content": "Generate synthetic data using YData's synthesizer",
+              "associated_id_refs": [
+                {
+                  "node_ref": "fbc53b3a-7fb0-4f41-8c5f-a4a6cddf5bd3"
+                }
+              ]
+            },
+            {
+              "id": "a63e06b7-a46a-43da-834a-3f66949c3000",
+              "x_pos": 809,
+              "y_pos": -6,
+              "width": 175,
+              "height": 67,
+              "class_name": "d3-comment-rect",
+              "content": "Generate YData Synthetic Data Quality Report",
+              "associated_id_refs": [
+                {
+                  "node_ref": "cf939b18-ed20-4e48-a44a-8f7f07851487"
+                }
+              ]
+            }
+          ]
+        },
+        "version": 3
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}

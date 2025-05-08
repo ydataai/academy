@@ -1,0 +1,233 @@
+{
+  "doc_type": "pipeline",
+  "version": "3.0",
+  "json_schema": "http://api.dataplatform.ibm.com/schemas/common-pipeline/pipeline-flow/pipeline-flow-v3-schema.json",
+  "id": "elyra-auto-generated-pipeline",
+  "primary_pipeline": "primary",
+  "pipelines": [
+    {
+      "id": "primary",
+      "nodes": [
+        {
+          "id": "7ab24ace-fe9b-48c8-b844-375cdf786352",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "metadata/html_format.py",
+                "metadata/metadata_compare_report.py",
+                "metadata/metadata_compare.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [
+                "summary_diff.pkl",
+                "stats_diff.pkl"
+              ],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "1. Profiling_compare_diff.ipynb",
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.56.4-cpu"
+            },
+            "label": "Check data drifts",
+            "ui_data": {
+              "label": "Check data drifts",
+              "image": "/lab/6d3db1e0-4b88-4046-a28c-7dfafeabe035/ab7ade3b-4f74-4314-b042-c39cf0ea1ae1/static/elyra/notebook.svg",
+              "x_pos": 144,
+              "y_pos": 28,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              }
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "00e7c809-5e93-4e4c-b6b5-4cae4e591455",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [
+                "metadata/html_format.py",
+                "metadata/metadata_compare_report.py",
+                "metadata/metadata_compare.py",
+                "utils/emails.py"
+              ],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "3. Send_email_alert.ipynb",
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.56.4-cpu"
+            },
+            "label": "Send email",
+            "ui_data": {
+              "label": "Send email",
+              "image": "/lab/6d3db1e0-4b88-4046-a28c-7dfafeabe035/ab7ade3b-4f74-4314-b042-c39cf0ea1ae1/static/elyra/notebook.svg",
+              "x_pos": 146,
+              "y_pos": 160,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "1f39e7d7-afa6-44fb-b25d-57c67b9e601c",
+                  "node_id_ref": "7ab24ace-fe9b-48c8-b844-375cdf786352",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "38c2717c-2498-47af-ba95-eaaed12cc01b",
+          "type": "execution_node",
+          "op": "execute-notebook-node",
+          "app_data": {
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "2. Constraints_validation.ipynb",
+              "runtime_image": "788946076961.dkr.ecr.eu-west-1.amazonaws.com/pipelines_ydata:0.56.4-cpu"
+            },
+            "label": "",
+            "ui_data": {
+              "label": "2. Constraints_validation.ipynb",
+              "image": "/lab/6d3db1e0-4b88-4046-a28c-7dfafeabe035/ab7ade3b-4f74-4314-b042-c39cf0ea1ae1/static/elyra/notebook.svg",
+              "x_pos": 447,
+              "y_pos": 96,
+              "description": "Run notebook file"
+            }
+          },
+          "inputs": [
+            {
+              "id": "inPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Input Port"
+                }
+              },
+              "links": [
+                {
+                  "id": "0523f6bd-021c-4a8a-b2ae-ef8628170275",
+                  "node_id_ref": "7ab24ace-fe9b-48c8-b844-375cdf786352",
+                  "port_id_ref": "outPort"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "outPort",
+              "app_data": {
+                "ui_data": {
+                  "cardinality": {
+                    "min": 0,
+                    "max": -1
+                  },
+                  "label": "Output Port"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "app_data": {
+        "ui_data": {
+          "comments": []
+        },
+        "version": 8,
+        "runtime_type": "KUBEFLOW_PIPELINES",
+        "properties": {
+          "name": "datadrift_constraints",
+          "runtime": "Kubeflow Pipelines",
+          "pipeline_defaults": {
+            "mounted_volumes": [],
+            "kubernetes_pod_annotations": [],
+            "kubernetes_shared_mem_size": {},
+            "kubernetes_tolerations": [],
+            "kubernetes_pod_labels": [],
+            "env_vars": [],
+            "kubernetes_secrets": []
+          }
+        }
+      },
+      "runtime_ref": ""
+    }
+  ],
+  "schemas": []
+}
