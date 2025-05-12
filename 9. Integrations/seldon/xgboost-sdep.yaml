@@ -1,0 +1,25 @@
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: xgboost
+  namespace: default
+spec:
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - name: classifier
+          resources:
+            limits:
+              cpu: 2
+              memory: 10Gi
+            requests:
+              cpu: 2
+              memory: 10Gi
+    graph:
+      children: []
+      implementation: XGBOOST_SERVER
+      modelUri: gs://pipelines_artifacts/xgboost_seldon/
+      name: classifier
+    name: default
+    replicas: 1

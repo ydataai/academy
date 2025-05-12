@@ -1,0 +1,62 @@
+column: Col1
+  vartype: float
+  datatype: numerical
+  #optional
+  missings: 0.2
+  min: 0.5
+  max: 1.0
+
+column: Col2
+  vartype: int
+  datatype: numerical
+  #optional
+  min: 100
+  max: 500
+
+column: Col3
+  vartype: int
+  datatype: categorical
+  #optional
+  allow_duplicates: False
+  min: 100
+  max: 500
+
+column: Col4
+  vartype: int
+  datatype: categorical
+  #optional
+  categories: [1, 2, 3, 4, 5]
+  probabilities: [0.1, 0.2, 0.3, 0.3, 0.1]
+
+column: Col5
+  vartype: datetime
+  datatype: date
+  #optional
+  min: "1990, 1, 1"
+  max: "2000, 12, 31"
+  format: "%Y, %m, %d"
+
+column: Col6
+  vartype: string
+  datatype: string
+  #optional
+  regex: "[A-Z]{2}-[0-9]{7}"
+
+column: Col7
+  vartype: string
+  datatype: string
+  #optional
+  piitype: first_name
+
+column: Col8
+  vartype: string
+  datatype: string
+  #optional
+  piitype: last_name
+
+column: Col9
+  vartype: string
+  datatype: string
+  #optional
+  piitype: email
+

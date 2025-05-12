@@ -1,0 +1,38 @@
+district: 
+  primary_keys: [A1]
+
+client:
+  primary_keys: [client_id]
+  foreign_keys:
+    - {column: district_id, parent_table: district, parent_column: A1}
+
+account:
+  primary_keys: [account_id]
+  foreign_keys:
+    - {column: district_id, parent_table: district, parent_column: A1}
+
+disp:
+  primary_keys: [disp_id]
+  foreign_keys:
+    - {column: account_id, parent_table: account, parent_column: account_id}
+    - {column: client_id, parent_table: client, parent_column: client_id}
+
+card:
+  primary_keys: [card_id]
+  foreign_keys:
+    - {column: disp_id, parent_table: disp, parent_column: disp_id}
+
+loan:
+  primary_keys: [loan_id]
+  foreign_keys:
+    - {column: account_id, parent_table: account, parent_column: account_id}
+
+order:
+  primary_keys: [order_id]
+  foreign_keys:
+    - {column: account_id, parent_table: account, parent_column: account_id}
+
+trans:
+  primary_keys: [trans_id]
+  foreign_keys:
+    - {column: account_id, parent_table: account, parent_column: account_id}
